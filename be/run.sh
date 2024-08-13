@@ -1,0 +1,1 @@
+flask --app hello.py --debug run
