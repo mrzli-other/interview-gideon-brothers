@@ -1,12 +1,12 @@
 import { Component } from '@angular/core';
-import { RouterLink } from '@angular/router';
+import { RouterLink, RouterOutlet } from '@angular/router';
 import { LinkData } from '../types';
 import { LinksComponent } from '../shared';
 
 @Component({
   selector: 'robots',
   standalone: true,
-  imports: [RouterLink, LinksComponent],
+  imports: [RouterLink, RouterOutlet, LinksComponent],
   templateUrl: './robots.component.html',
 })
 export class RobotsComponent {
