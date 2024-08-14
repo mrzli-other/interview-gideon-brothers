@@ -1,0 +1,7 @@
+<div class="flex gap-2">
+  @for(item of items; track item.url; let last = $last) {
+  <a routerLink="{{ item.url }}" class="text-blue-400">{{ item.label }}</a>
+  @if (!last) {
+  <span>|</span>
+  } }
+</div>

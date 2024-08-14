@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { CardData } from './card-data';
+import { LinkData } from '../../types';
 
 @Component({
   selector: 'dashboard-card',
@@ -13,14 +13,14 @@ import { CardData } from './card-data';
   },
 })
 export class DashboardCardComponent {
-  private _data: CardData | undefined = undefined;
+  private _data: LinkData | undefined = undefined;
 
-  public get data(): CardData | undefined {
+  public get data(): LinkData | undefined {
     return this._data;
   }
 
   @Input()
-  public set data(value: CardData | undefined) {
+  public set data(value: LinkData | undefined) {
     this._data = value;
   }
 

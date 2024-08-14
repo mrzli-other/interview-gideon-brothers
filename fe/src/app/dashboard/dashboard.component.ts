@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
-import { CardData } from './dasbboard-card/card-data';
 import { DashboardCardComponent } from './dasbboard-card/dashboard-card.component';
 import { Router } from '@angular/router';
+import { LinkData } from '../types';
 
 @Component({
   selector: 'dashboard',
@@ -10,14 +10,14 @@ import { Router } from '@angular/router';
   templateUrl: './dashboard.component.html',
 })
 export class DashboardComponent {
-  private readonly _cardData: readonly CardData[];
+  private readonly _linkDataList: readonly LinkData[];
 
-  public get cardData(): readonly CardData[] {
-    return this._cardData;
+  public get linkDataList(): readonly LinkData[] {
+    return this._linkDataList;
   }
 
   public constructor(private readonly router: Router) {
-    this._cardData = [
+    this._linkDataList = [
       { label: 'Robot Types', url: '/robot-types' },
       { label: 'Robots', url: '/robots' },
     ];
