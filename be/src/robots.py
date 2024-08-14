@@ -1,12 +1,12 @@
 from flask_restful import Resource, reqparse
 from flask_apispec import MethodResource, doc, use_kwargs, marshal_with
-from marshmallow import Schema, fields
+from marshmallow import Schema, fields, validate
 
 robots = []
 
 class RobotSchema(Schema):
     id = fields.Int(dump_only=True)
-    name = fields.Str(required=True)
+    name = fields.Str(required=True, validate=validate.Length(min=1, max=255))
     robot_type_id = fields.Int(required=True)
 
 class Robots(MethodResource, Resource):

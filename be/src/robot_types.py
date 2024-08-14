@@ -1,13 +1,13 @@
 from flask_restful import Resource, reqparse
 from flask_apispec import MethodResource, doc, use_kwargs, marshal_with
-from marshmallow import Schema, fields
+from marshmallow import Schema, fields, validate
 
 robot_types = []
 
 class RobotTypeSchema(Schema):
     id = fields.Int(dump_only=True)
-    name = fields.Str(required=True)
-    dimensions = fields.Str(required=True)
+    name = fields.Str(required=True, validate=validate.Length(min=1, max=255))
+    dimensions = fields.Str(required=True, validate=validate.Length(min=1, max=4096))
 
 class RobotTypes(MethodResource, Resource):
     @doc(description='Get all robot types', tags=['Robot Types'])
