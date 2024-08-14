@@ -1,0 +1,8 @@
+<div class="grid grid-flow-col justify-start gap-2">
+  @for (item of cardData; track item.label) {
+  <dashboard-card
+    [data]="item"
+    (onClick)="handleCardClick($event)"
+  ></dashboard-card>
+  }
+</div>
