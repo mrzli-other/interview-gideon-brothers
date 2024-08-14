@@ -20,11 +20,17 @@ export const routes: Routes = [
     path: 'dashboard',
     title: 'Dashboard',
     component: DashboardComponent,
+    data: {
+      title: 'Dashboard',
+    },
   },
   {
     path: 'robot-types',
     title: 'Robot Types',
     component: RobotTypesComponent,
+    data: {
+      title: 'Robot Types',
+    },
     children: [
       {
         path: '',
@@ -47,6 +53,9 @@ export const routes: Routes = [
     path: 'robots',
     title: 'Robots',
     component: RobotsComponent,
+    data: {
+      title: 'Robots',
+    },
     children: [
       {
         path: '',

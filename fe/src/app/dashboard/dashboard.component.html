@@ -1,8 +1,11 @@
-<div class="grid grid-flow-col justify-start gap-2">
-  @for (item of linkDataList; track item.label) {
-    <dashboard-card
-      [data]="item"
-      (onClick)="handleCardClick($event)"
-    ></dashboard-card>
-  }
+<div>
+  <h1 class="text-2xl mb-4">Daashoard</h1>
+  <div class="grid grid-flow-col justify-start gap-2">
+    @for (item of linkDataList; track item.label) {
+      <dashboard-card
+        [data]="item"
+        (onClick)="handleCardClick($event)"
+      ></dashboard-card>
+    }
+  </div>
 </div>
