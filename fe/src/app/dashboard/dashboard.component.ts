@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { CardData } from './dasbboard-card/card-data';
 import { DashboardCardComponent } from './dasbboard-card/dashboard-card.component';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'dashboard',
@@ -15,7 +16,7 @@ export class DashboardComponent {
     return this._cardData;
   }
 
-  public constructor() {
+  public constructor(private readonly router: Router) {
     this._cardData = [
       { label: 'Robot Types', url: '/robot-types' },
       { label: 'Robots', url: '/robots' },
@@ -23,6 +24,6 @@ export class DashboardComponent {
   }
 
   public handleCardClick(url: string): void {
-    console.log(`Navigating to ${url}`);
+    this.router.navigate([url]);
   }
 }
