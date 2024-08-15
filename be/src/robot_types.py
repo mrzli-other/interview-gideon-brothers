@@ -2,7 +2,23 @@ from flask_restful import Resource, reqparse
 from flask_apispec import MethodResource, doc, use_kwargs, marshal_with
 from marshmallow import Schema, fields, validate
 
-robot_types = []
+robot_types = [
+    {
+        'id': 1,
+        'name': 'Robot 1',
+        'dimensions': 'Robot 1 dimensions',
+    },
+    {
+        'id': 2,
+        'name': 'Robot 2',
+        'dimensions': 'Robot 2 dimensions',
+    },
+    {
+        'id': 3,
+        'name': 'Robot 3',
+        'dimensions': 'Robot 3 dimensions',
+    },
+]
 
 class RobotTypeSchema(Schema):
     id = fields.Int(dump_only=True)
