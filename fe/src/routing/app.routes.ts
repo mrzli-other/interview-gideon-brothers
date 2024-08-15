@@ -1,14 +1,14 @@
 import { Routes } from '@angular/router';
-import { DashboardComponent } from '../app/dashboard/dashboard.component';
-import { RobotTypesComponent } from '../app/robot-types/robot-types.component';
-import { RobotsComponent } from '../app/robots/robots.component';
-import { NotFoundComponent } from '../app/not-found/not-found.component';
-import { UpdateRobotTypeComponent } from '../app/robot-types/update-robot-type/update-robot-type.component';
-import { RobotTypeListComponent } from '../app/robot-types/robot-type-list/robot-type-list.component';
-import { UpdateRobotComponent } from '../app/robots/update-robot/update-robot.component';
-import { RobotListComponent } from '../app/robots/robot-list/robot-list.component';
-import { CreateRobotTypeComponent } from '../app/robot-types/create-robot-type/create-robot-type.component';
-import { CreateRobotComponent } from '../app/robots/create-robot/create-robot.component';
+import { DashboardComponent } from '../components/dashboard/dashboard.component';
+import { RobotTypesComponent } from '../components/robot-types/robot-types.component';
+import { RobotsComponent } from '../components/robots/robots.component';
+import { NotFoundComponent } from '../components/not-found/not-found.component';
+import { UpdateRobotTypeComponent } from '../components/robot-types/update-robot-type/update-robot-type.component';
+import { RobotTypeListComponent } from '../components/robot-types/robot-type-list/robot-type-list.component';
+import { UpdateRobotComponent } from '../components/robots/update-robot/update-robot.component';
+import { RobotListComponent } from '../components/robots/robot-list/robot-list.component';
+import { CreateRobotTypeComponent } from '../components/robot-types/create-robot-type/create-robot-type.component';
+import { CreateRobotComponent } from '../components/robots/create-robot/create-robot.component';
 
 export const routes: Routes = [
   {

@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { LinkData } from '../../types';
+import { LinkData } from '../../shared';
 
 @Component({
   selector: 'dashboard-card',

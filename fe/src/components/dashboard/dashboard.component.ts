@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { DashboardCardComponent } from './dasbboard-card/dashboard-card.component';
 import { Router } from '@angular/router';
-import { LinkData } from '../types';
+import { LinkData } from '../shared';
 
 @Component({
   selector: 'dashboard',

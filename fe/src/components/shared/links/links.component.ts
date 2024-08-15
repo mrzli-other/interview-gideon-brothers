@@ -1,6 +1,6 @@
 import { Component, Input } from '@angular/core';
-import { LinkData } from '../../types';
 import { RouterLink } from '@angular/router';
+import { LinkData } from './link-data';
 
 @Component({
   selector: 'links',
