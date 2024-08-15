@@ -1,5 +1,5 @@
 import { AsyncPipe } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { map, Observable, of } from 'rxjs';
 
@@ -9,7 +9,7 @@ import { map, Observable, of } from 'rxjs';
   imports: [AsyncPipe],
   templateUrl: './update-robot.component.html',
 })
-export class UpdateRobotComponent {
+export class UpdateRobotComponent implements OnInit {
   public id$: Observable<number | undefined> = of(undefined);
 
   public constructor(private readonly route: ActivatedRoute) {}

@@ -1,5 +1,6 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
+import { AppService } from './app.service';
 
 @Component({
   selector: 'app-root',
@@ -7,5 +8,12 @@ import { RouterOutlet } from '@angular/router';
   imports: [RouterOutlet],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss',
+  providers: [AppService],
 })
-export class AppComponent {}
+export class AppComponent implements OnInit {
+  public constructor(private readonly appService: AppService) {}
+
+  public ngOnInit(): void {
+    this.appService.fetchAllData();
+  }
+}

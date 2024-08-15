@@ -1,1 +1,14 @@
-<div class="">Create Robot Type</div>
+<div class="">
+  <div>Create Robot Type</div>
+  <form [formGroup]="form" (ngSubmit)="handleSubmit()">
+    <div class="flex flex-col">
+      <label for="name">Name</label>
+      <input type="text" id="name" formControlName="name" />
+    </div>
+    <div class="flex flex-col">
+      <label for="dimensions">Dimensions</label>
+      <input type="text" id="dimensions" formControlName="dimensions" />
+    </div>
+    <button type="submit">Create</button>
+  </form>
+</div>
