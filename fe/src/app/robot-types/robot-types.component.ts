@@ -12,6 +12,7 @@ import { LinksComponent } from '../shared';
 export class RobotTypesComponent {
   public readonly links: readonly LinkData[] = [
     { label: 'Dashboard', url: '/dashboard' },
+    { label: 'Robot Types', url: '/robot-types' },
     { label: 'Robots', url: '/robots' },
   ];
 }

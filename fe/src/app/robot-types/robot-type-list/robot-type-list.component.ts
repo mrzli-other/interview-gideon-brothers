@@ -8,11 +8,12 @@ import {
   ConfirmationDialogComponent,
   ConfirmationDialogInputData,
 } from '../../shared';
+import { MatButton } from '@angular/material/button';
 
 @Component({
   selector: 'robot-type-list',
   standalone: true,
-  imports: [MatTableModule, MatIconModule],
+  imports: [MatTableModule, MatIconModule, MatButton],
   templateUrl: './robot-type-list.component.html',
 })
 export class RobotTypeListComponent {
@@ -67,5 +68,9 @@ export class RobotTypeListComponent {
         },
       },
     );
+  }
+
+  public handleCreateNewRobotType(): void {
+    this.router.navigate(['create'], { relativeTo: this.route });
   }
 }
