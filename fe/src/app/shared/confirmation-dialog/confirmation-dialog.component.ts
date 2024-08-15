@@ -28,4 +28,8 @@ export class ConfirmationDialogComponent {
     MatDialogRef<ConfirmationDialogComponent>,
   );
   public readonly data = inject<ConfirmationDialogInputData>(MAT_DIALOG_DATA);
+
+  public handleClick(result: boolean): void {
+    this.dialogRef.close(result);
+  }
 }

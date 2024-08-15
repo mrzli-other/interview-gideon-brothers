@@ -56,18 +56,24 @@ export class RobotTypeListComponent {
   public handleDeleteItem(item: RobotType): void {
     const { name } = item;
 
-    this.dialog.open<ConfirmationDialogComponent, ConfirmationDialogInputData>(
+    const dialogRef = this.dialog.open<
       ConfirmationDialogComponent,
-      {
-        data: {
-          title: 'Delete Robot Type',
-          text: [
-            `Are you sure you want to delete robot type '${name}'?`,
-            'This action will also delete all robots of that type!',
-          ],
-        },
+      ConfirmationDialogInputData
+    >(ConfirmationDialogComponent, {
+      data: {
+        title: 'Delete Robot Type',
+        text: [
+          `Are you sure you want to delete robot type '${name}'?`,
+          'This action will also delete all robots of that type!',
+        ],
       },
-    );
+    });
+
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result === true) {
+        console.log(`Deleting robot type '${name}'`);
+      }
+    });
   }
 
   public handleCreateNewRobotType(): void {
