@@ -1,3 +1,11 @@
+@use '@angular/material' as mat;
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@import "https://fonts.googleapis.com/icon?family=Material+Icons";
+
+@include mat.core();
+
+$theme: mat.define-theme()

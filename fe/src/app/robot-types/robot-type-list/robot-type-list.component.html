@@ -1,4 +1,4 @@
-<div class="">
+<div>
   <table mat-table [dataSource]="items">
     <ng-container matColumnDef="id">
       <th mat-header-cell *matHeaderCellDef>ID</th>
@@ -12,13 +12,17 @@
       <th mat-header-cell *matHeaderCellDef>Dimensions</th>
       <td mat-cell *matCellDef="let item">{{ item.dimensions }}</td>
     </ng-container>
-    <!-- <ng-container matColumnDef="actions">
+    <ng-container matColumnDef="actions">
       <th mat-header-cell *matHeaderCellDef>Actions</th>
-      <td mat-cell *matCellDef="let item">
-        <button mat-button color="primary" (click)="edit(item)">Edit</button>
-        <button mat-button color="warn" (click)="delete(item)">Delete</button>
+      <td mat-cell *matCellDef="let item" class="">
+        <button mat-button color="primary" (click)="handleEditItem(item)">
+          <mat-icon class="text-base">edit</mat-icon>
+        </button>
+        <button mat-button color="warn" (click)="handleDeleteItem(item)">
+          <mat-icon class="text-base">delete</mat-icon>
+        </button>
       </td>
-    </ng-container>-->
+    </ng-container>
     <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
     <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
   </table>
