@@ -1,4 +1,5 @@
 from flask import Flask, Blueprint, jsonify
+from flask_cors import CORS
 from flask_restful import Api
 from flask_apispec import FlaskApiSpec
 from flask_swagger_ui import get_swaggerui_blueprint
@@ -7,6 +8,7 @@ from robots import Robots, Robot
 
 def create_app():
     app = Flask(__name__)
+    CORS(app)
 
     api_bp = Blueprint('api', __name__, url_prefix='/api')
     api = Api(api_bp)
