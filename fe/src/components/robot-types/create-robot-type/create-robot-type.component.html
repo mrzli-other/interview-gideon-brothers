@@ -12,6 +12,7 @@
         type="text"
         id="name"
         formControlName="name"
+        [isError]="isError('name')"
         autocomplete="off"
       />
     </div>
@@ -22,12 +23,13 @@
         type="text"
         id="dimensions"
         formControlName="dimensions"
+        [isError]="isError('dimensions')"
         autocomplete="off"
       />
     </div>
     <button
       rm-button
-      class="text-red-400 border-red-400"
+      class="text-blue-400 border-blue-400"
       [disabled]="form.invalid"
       type="submit"
     >

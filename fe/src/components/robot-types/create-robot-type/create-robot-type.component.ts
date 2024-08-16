@@ -44,4 +44,13 @@ export class CreateRobotTypeComponent {
 
     this.store.dispatch(RobotTypeActions.create({ payload: data }));
   }
+
+  public isError(field: string): boolean {
+    const control = this.form.get(field) ?? undefined;
+    return (
+      control !== undefined &&
+      control.invalid &&
+      (control.touched || control.dirty)
+    );
+  }
 }
