@@ -1,4 +1,4 @@
-from database import Database
+from .database import Database
 
 class RobotDao:
     def __init__(self, db_config):

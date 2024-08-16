@@ -1,6 +1,7 @@
 from flask_restful import Resource
 from flask_apispec import MethodResource, doc, use_kwargs, marshal_with
 from marshmallow import Schema, fields, validate
+from db import RobotTypeDao
 
 robot_types = [
     {
@@ -43,6 +44,7 @@ def get_next_id(items, key):
 class RobotTypes(MethodResource, Resource):
     def __init__(self, config):
         self.config = config
+        self.dao = RobotTypeDao(config['db'])
 
     @doc(description='Get all robot types', tags=['Robot Types'])
     @marshal_with(RobotTypeSchema(many=True))

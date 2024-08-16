@@ -1,7 +1,8 @@
-from database import Database
+from .database import Database
 
 class RobotTypeDao:
     def __init__(self, db_config):
+        print(db_config)
         self.db = Database(db_config)
 
     def fetch_all(self):
