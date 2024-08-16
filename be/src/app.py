@@ -5,13 +5,10 @@ from flask_apispec import FlaskApiSpec
 from flask_swagger_ui import get_swaggerui_blueprint
 from container import DependencyContainer
 from controllers import RobotTypes, RobotType, Robots, Robot
-from config import get_config
 
 def create_app():
     app = Flask(__name__)
     CORS(app)
-
-    config = get_config()
 
     resource_args = { 'container': DependencyContainer() }
 
