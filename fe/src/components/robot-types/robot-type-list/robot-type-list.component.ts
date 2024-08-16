@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { MatTableModule } from '@angular/material/table';
 import { RobotType } from '../../../types';
 import { MatIconModule } from '@angular/material/icon';
@@ -9,45 +9,55 @@ import {
   ConfirmationDialogInputData,
 } from '../../shared';
 import { MatButton } from '@angular/material/button';
+import { Store } from '@ngrx/store';
+import { robotTypeFeature } from '../../../store';
+import { map, Subscription } from 'rxjs';
+import { AsyncPipe } from '@angular/common';
 
 @Component({
   selector: 'robot-type-list',
   standalone: true,
-  imports: [MatTableModule, MatIconModule, MatButton],
+  imports: [AsyncPipe, MatTableModule, MatIconModule, MatButton],
   templateUrl: './robot-type-list.component.html',
 })
-export class RobotTypeListComponent {
-  public items: readonly RobotType[] = [
-    {
-      id: 1,
-      name: 'Robot 1',
-      dimensions: 'Robot 1 dimensions',
-    },
-    {
-      id: 2,
-      name: 'Robot 2',
-      dimensions: 'Robot 2 dimensions',
-    },
-    {
-      id: 3,
-      name: 'Robot 3',
-      dimensions: 'Robot 3 dimensions',
-    },
-  ];
+export class RobotTypeListComponent implements OnInit, OnDestroy {
+  public items: readonly RobotType[] = [];
 
-  public displayedColumns: readonly string[] = [
+  public readonly displayedColumns: readonly string[] = [
     'id',
     'name',
     'dimensions',
     'actions',
   ];
 
-  private readonly dialog = inject(MatDialog);
+  private itemsSubscription: Subscription | undefined = undefined;
 
   public constructor(
     private readonly router: Router,
     private readonly route: ActivatedRoute,
+    private readonly dialog: MatDialog,
+    private readonly store: Store,
   ) {}
+
+  public ngOnInit(): void {
+    this.itemsSubscription = this.store
+      .select(robotTypeFeature.selectRobotTypes)
+      .pipe(
+        map((robotTypes) => {
+          return robotTypes ?? [];
+        }),
+      )
+      .subscribe((items) => {
+        console.log('RobotTypeListComponent: items', items);
+        this.items = items;
+      });
+  }
+
+  public ngOnDestroy(): void {
+    if (this.itemsSubscription !== undefined) {
+      this.itemsSubscription.unsubscribe();
+    }
+  }
 
   public handleEditItem(item: RobotType): void {
     this.router.navigate(['update', item.id], { relativeTo: this.route });

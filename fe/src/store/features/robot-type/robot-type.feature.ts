@@ -22,9 +22,9 @@ export const robotTypeFeature = createFeature({
       ...state,
       isLoading: true,
     })),
-    on(RobotTypeActions.getAllSuccess, (state, robotTypes) => ({
+    on(RobotTypeActions.getAllSuccess, (state, action) => ({
       ...state,
-      robotTypes,
+      robotTypes: action.payload,
       isLoading: false,
     })),
     on(RobotTypeActions.getAllError, (state) => ({
@@ -36,9 +36,12 @@ export const robotTypeFeature = createFeature({
       ...state,
       isSubmitting: true,
     })),
-    on(RobotTypeActions.createSuccess, (state, robotType) => ({
+    on(RobotTypeActions.createSuccess, (state, action) => ({
       ...state,
-      robotTypes: [...(state.robotTypes ?? []), robotType],
+      robotTypes:
+        state.robotTypes !== undefined
+          ? [...state.robotTypes, action.payload]
+          : [action.payload],
       isSubmitting: false,
     })),
     on(RobotTypeActions.createError, (state) => ({
@@ -49,10 +52,10 @@ export const robotTypeFeature = createFeature({
       ...state,
       isSubmitting: true,
     })),
-    on(RobotTypeActions.updateSuccess, (state, robotType) => ({
+    on(RobotTypeActions.updateSuccess, (state, action) => ({
       ...state,
       robotTypes: state.robotTypes?.map((r) =>
-        r.id === robotType.id ? robotType : r,
+        r.id === action.payload.id ? action.payload : r,
       ),
       isSubmitting: false,
     })),
@@ -64,9 +67,9 @@ export const robotTypeFeature = createFeature({
       ...state,
       isSubmitting: true,
     })),
-    on(RobotTypeActions.deleteSuccess, (state, deleteData) => ({
+    on(RobotTypeActions.deleteSuccess, (state, action) => ({
       ...state,
-      robotTypes: state.robotTypes?.filter((r) => r.id !== deleteData.id),
+      robotTypes: state.robotTypes?.filter((r) => r.id !== action.payload.id),
       isSubmitting: false,
     })),
     on(RobotTypeActions.deleteError, (state) => ({

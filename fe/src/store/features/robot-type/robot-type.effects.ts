@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { RobotTypeApiService } from '../../../services/robot-type-api.service';
 import { RobotTypeActions } from './robot-type.actions';
-import { of, catchError, concat, map, switchMap, tap, Observable } from 'rxjs';
+import { of, catchError, concat, map, switchMap, Observable } from 'rxjs';
 import { Action } from '@ngrx/store';
 
 @Injectable()
@@ -43,7 +43,9 @@ function pipeGetAll(
       concat(
         of(RobotTypeActions.getAllPending()),
         robotTypeApiService.getAllRobotTypes().pipe(
-          map((robotTypes) => RobotTypeActions.getAllSuccess(robotTypes)),
+          map((robotTypes) =>
+            RobotTypeActions.getAllSuccess({ payload: robotTypes }),
+          ),
           catchError((error) => {
             return of(RobotTypeActions.getAllError({ error }));
           }),
@@ -63,7 +65,9 @@ function pipeCreate(
       concat(
         of(RobotTypeActions.createPending()),
         robotTypeApiService.createRobotType(action.payload).pipe(
-          map((robotType) => RobotTypeActions.createSuccess(robotType)),
+          map((robotType) =>
+            RobotTypeActions.createSuccess({ payload: robotType }),
+          ),
           catchError((error) => {
             return of(RobotTypeActions.createError({ error }));
           }),
@@ -83,7 +87,9 @@ function pipeGet(
       concat(
         of(RobotTypeActions.getPending()),
         robotTypeApiService.getRobotType(action.payload.id).pipe(
-          map((robotType) => RobotTypeActions.getSuccess(robotType)),
+          map((robotType) =>
+            RobotTypeActions.getSuccess({ payload: robotType }),
+          ),
           catchError((error) => {
             return of(RobotTypeActions.getError({ error }));
           }),
@@ -103,7 +109,9 @@ function pipeUpdate(
       concat(
         of(RobotTypeActions.updatePending()),
         robotTypeApiService.updateRobotType(action.payload).pipe(
-          map((robotType) => RobotTypeActions.updateSuccess(robotType)),
+          map((robotType) =>
+            RobotTypeActions.updateSuccess({ payload: robotType }),
+          ),
           catchError((error) => {
             return of(RobotTypeActions.updateError({ error }));
           }),
@@ -123,7 +131,9 @@ function pipeDelete(
       concat(
         of(RobotTypeActions.deletePending()),
         robotTypeApiService.deleteRobotType(action.payload.id).pipe(
-          map(() => RobotTypeActions.deleteSuccess(action.payload)),
+          map(() =>
+            RobotTypeActions.deleteSuccess({ payload: action.payload }),
+          ),
           catchError((error) => {
             return of(RobotTypeActions.deleteError({ error }));
           }),
