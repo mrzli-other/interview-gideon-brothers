@@ -46,6 +46,8 @@ def create_app():
 
     app.register_blueprint(api_bp)
 
+    app.register_error_handler(Exception, _handle_error)
+
     # setup swagger
     docs = FlaskApiSpec(app)
 
@@ -87,3 +89,10 @@ def _setup_swagger(app):
     API_URL = '/swagger.json'
     swaggerui_blueprint = get_swaggerui_blueprint(SWAGGER_URL, API_URL, config={'app_name': "Robot Manager"})
     app.register_blueprint(swaggerui_blueprint, url_prefix=SWAGGER_URL)
+
+def _handle_error(error):
+    response = {
+        "message": str(error),
+        "type": error.__class__.__name__
+    }
+    return jsonify(response), 500
