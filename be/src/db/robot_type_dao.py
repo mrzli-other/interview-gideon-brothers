@@ -31,7 +31,7 @@ class RobotTypeDao:
 
     def delete(self, robot_type_id):
         # Delete all robots of this type first
-        delete_robots_query = "DELETE FROM robots WHERE robot_type_id = %s"
+        delete_robots_query = "DELETE FROM robot WHERE robot_type_id = %s"
         self.db.cursor.execute(delete_robots_query, (robot_type_id,))
         
         # Delete the robot type
