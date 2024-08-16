@@ -1,0 +1,2 @@
+class RobotService:
+  pass

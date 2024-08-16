@@ -18,7 +18,9 @@ class RobotDao:
         query = "INSERT INTO robot (name, robot_type_id) VALUES (%s, %s) RETURNING id"
         self.db.cursor.execute(query, (name, robot_type_id))
         self.db.connection.commit()
-        return self.db.cursor.fetchone()[0]
+        robot_id = self.db.cursor.fetchone()[0]
+
+        return self.fetch_one(robot_id)
 
     def update(self, robot_id, name, robot_type_id):
         query = "UPDATE robot SET name = %s, robot_type_id = %s, updated_at = NOW() WHERE id = %s"

@@ -12,7 +12,7 @@ class RobotSchema(Schema):
 class Robots(MethodResource, Resource):
     def __init__(self, container):
         self.container = container
-        self.dao = container.get_robot_dao()
+        self.service = container.get_robot_service()
 
     @doc(description='Get all robots', tags=['Robots'])
     @marshal_with(RobotSchema(many=True))
@@ -34,7 +34,7 @@ class Robots(MethodResource, Resource):
 class Robot(MethodResource, Resource):
     def __init__(self, container):
         self.container = container
-        self.dao = container.get_robot_dao()
+        self.service = container.get_robot_service()
 
     @doc(description='Get a robot by ID', tags=['Robots'])
     @marshal_with(RobotSchema)

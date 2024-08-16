@@ -1,12 +1,15 @@
+from services import RobotTypeService, RobotService
 from db import Database, RobotTypeDao, RobotDao
 from config import get_config
 
 class DependencyContainer:
   def __init__(self):
     self.config = None
-    self.database = None
+    self.robot_type_service = None
     self.robot_type_dao = None
+    self.robot_service = None
     self.robot_dao = None
+    self.database = None
 
   def get_config(self):
     return _get_cached_or_calculate(
@@ -17,10 +20,10 @@ class DependencyContainer:
   def get_db_config(self):
     return self.get_config()['db']
   
-  def get_database(self):
+  def get_robot_type_service(self):
     return _get_cached_or_calculate(
-      self.database,
-      lambda: Database(self.get_db_config())
+      self.robot_type_service,
+      lambda: RobotTypeService(self)
     )
   
   def get_robot_type_dao(self):
@@ -29,10 +32,22 @@ class DependencyContainer:
       lambda: RobotTypeDao(self.get_db_config())
     )
   
+  def get_robot_service(self):
+    return _get_cached_or_calculate(
+      self.robot_service,
+      lambda: RobotService(self)
+    )
+  
   def get_robot_dao(self):
     return _get_cached_or_calculate(
       self.robot_dao,
       lambda: RobotDao(self.get_db_config())
+    )
+  
+  def get_database(self):
+    return _get_cached_or_calculate(
+      self.database,
+      lambda: Database(self.get_db_config())
     )
   
 def _get_cached_or_calculate(value, func):
