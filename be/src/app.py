@@ -49,10 +49,30 @@ def create_app():
     # setup swagger
     docs = FlaskApiSpec(app)
 
-    docs.register(RobotTypes, blueprint='api', endpoint='robot_types')
-    docs.register(RobotType, blueprint='api', endpoint='robot_type')
-    docs.register(Robots, blueprint='api', endpoint='robots')
-    docs.register(Robot, blueprint='api', endpoint='robot')
+    docs.register(
+        RobotTypes,
+        blueprint='api',
+        endpoint='robot_types',
+        resource_class_kwargs=resource_args
+    )
+    docs.register(
+        RobotType,
+        blueprint='api',
+        endpoint='robot_type',
+        resource_class_kwargs=resource_args
+    )
+    docs.register(
+        Robots,
+        blueprint='api',
+        endpoint='robots',
+        resource_class_kwargs=resource_args
+    )
+    docs.register(
+        Robot,
+        blueprint='api',
+        endpoint='robot',
+        resource_class_kwargs=resource_args
+    )
 
     @app.route('/swagger.json')
     def swagger_json():
