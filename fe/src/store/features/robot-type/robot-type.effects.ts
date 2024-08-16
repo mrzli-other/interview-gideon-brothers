@@ -4,6 +4,7 @@ import { RobotTypeApiService, SnackbarService } from '../../../services';
 import { RobotTypeActions } from './robot-type.actions';
 import { of, catchError, concat, map, switchMap, Observable, tap } from 'rxjs';
 import { Action } from '@ngrx/store';
+import { Router } from '@angular/router';
 
 @Injectable()
 export class RobotTypeEffects {
@@ -17,6 +18,7 @@ export class RobotTypeEffects {
     private readonly actions$: Actions,
     private readonly robotTypeApiService: RobotTypeApiService,
     private readonly snakcbarService: SnackbarService,
+    private readonly router: Router,
   ) {
     this.getAll$ = createEffect(() => this.pipeGetAll());
     this.create$ = createEffect(() => this.pipeCreate());
@@ -53,6 +55,7 @@ export class RobotTypeEffects {
           of(RobotTypeActions.createPending()),
           this.robotTypeApiService.createRobotType(action.payload).pipe(
             tap(() => {
+              this.router.navigate(['robot-types']);
               this.snakcbarService.show('Robot type created.');
             }),
             map((robotType) =>
@@ -96,6 +99,7 @@ export class RobotTypeEffects {
           of(RobotTypeActions.updatePending()),
           this.robotTypeApiService.updateRobotType(action.payload).pipe(
             tap(() => {
+              this.router.navigate(['robot-types']);
               this.snakcbarService.show('Robot type updated.');
             }),
             map((robotType) =>

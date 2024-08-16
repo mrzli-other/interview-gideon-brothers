@@ -10,7 +10,7 @@ import {
 } from '../../shared';
 import { MatButton } from '@angular/material/button';
 import { Store } from '@ngrx/store';
-import { robotTypeFeature } from '../../../store';
+import { RobotTypeActions, robotTypeFeature } from '../../../store';
 import { map, Subscription } from 'rxjs';
 import { AsyncPipe } from '@angular/common';
 
@@ -48,7 +48,6 @@ export class RobotTypeListComponent implements OnInit, OnDestroy {
         }),
       )
       .subscribe((items) => {
-        console.log('RobotTypeListComponent: items', items);
         this.items = items;
       });
   }
@@ -64,7 +63,7 @@ export class RobotTypeListComponent implements OnInit, OnDestroy {
   }
 
   public handleDeleteItem(item: RobotType): void {
-    const { name } = item;
+    const { id, name } = item;
 
     const dialogRef = this.dialog.open<
       ConfirmationDialogComponent,
@@ -81,7 +80,7 @@ export class RobotTypeListComponent implements OnInit, OnDestroy {
 
     dialogRef.afterClosed().subscribe((result) => {
       if (result === true) {
-        console.log(`Deleting robot type '${name}'`);
+        this.store.dispatch(RobotTypeActions.delete({ payload: { id } }));
       }
     });
   }

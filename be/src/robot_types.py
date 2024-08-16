@@ -18,12 +18,27 @@ robot_types = [
         'name': 'Robot 3',
         'dimensions': 'Robot 3 dimensions',
     },
+    {
+        'id': 4,
+        'name': 'Robot 4',
+        'dimensions': 'Robot 4 dimensions',
+    },
+    {
+        'id': 5,
+        'name': 'Robot 5',
+        'dimensions': 'Robot 5 dimensions',
+    },
 ]
 
 class RobotTypeSchema(Schema):
     id = fields.Int(dump_only=True)
     name = fields.Str(required=True, validate=validate.Length(min=1, max=255))
     dimensions = fields.Str(required=True, validate=validate.Length(min=1, max=4096))
+
+def get_next_id(items, key):
+    if items:
+        return max(item[key] for item in items) + 1
+    return 1
 
 class RobotTypes(MethodResource, Resource):
     @doc(description='Get all robot types', tags=['Robot Types'])
@@ -36,7 +51,7 @@ class RobotTypes(MethodResource, Resource):
     @marshal_with(RobotTypeSchema)
     def post(self, **kwargs):
         robot_type = {
-            'id': len(robot_types) + 1,
+            'id': get_next_id(robot_types, 'id'),
             'name': kwargs['name'],
             'dimensions': kwargs['dimensions']
         }

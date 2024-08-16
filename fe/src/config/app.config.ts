@@ -1,5 +1,6 @@
 import { ApplicationConfig, provideZoneChangeDetection } from '@angular/core';
 import { provideRouter } from '@angular/router';
+import { provideAnimations } from '@angular/platform-browser/animations';
 import { provideHttpClient } from '@angular/common/http';
 import { CONFIG_OPTIONS_TOKEN, ConfigOptions } from './config-options';
 import { provideState, provideStore } from '@ngrx/store';
@@ -12,6 +13,7 @@ export function createAppConfig(): ApplicationConfig {
     providers: [
       provideZoneChangeDetection({ eventCoalescing: true }),
       provideRouter(routes),
+      provideAnimations(),
       provideHttpClient(),
       provideStore(),
       provideState(robotTypeFeature),

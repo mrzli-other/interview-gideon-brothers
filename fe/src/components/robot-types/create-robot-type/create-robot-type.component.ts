@@ -5,6 +5,9 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
+import { Store } from '@ngrx/store';
+import { RobotTypeActions } from '../../../store';
+import { RobotTypeCreate } from '../../../types';
 
 @Component({
   selector: 'create-robot-type',
@@ -26,11 +29,18 @@ export class CreateRobotTypeComponent {
     ]),
   });
 
+  public constructor(private readonly store: Store) {}
+
   public handleSubmit(): void {
     if (this.form.invalid) {
       return;
     }
 
-    console.log(this.form.value);
+    const data: RobotTypeCreate = {
+      name: this.form.value.name ?? '',
+      dimensions: this.form.value.dimensions ?? '',
+    };
+
+    this.store.dispatch(RobotTypeActions.create({ payload: data }));
   }
 }
