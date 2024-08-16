@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { RobotTypeActions } from '../store';
+import { RobotActions, RobotTypeActions } from '../store';
 
 @Injectable()
 export class AppService {
@@ -8,5 +8,6 @@ export class AppService {
 
   public fetchAllData(): void {
     this.store.dispatch(RobotTypeActions.getAll());
+    this.store.dispatch(RobotActions.getAll());
   }
 }

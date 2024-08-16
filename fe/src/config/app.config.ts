@@ -4,7 +4,12 @@ import { provideAnimations } from '@angular/platform-browser/animations';
 import { provideHttpClient } from '@angular/common/http';
 import { CONFIG_OPTIONS_TOKEN, ConfigOptions } from './config-options';
 import { provideState, provideStore } from '@ngrx/store';
-import { RobotTypeEffects, robotTypeFeature } from '../store';
+import {
+  RobotEffects,
+  robotFeature,
+  RobotTypeEffects,
+  robotTypeFeature,
+} from '../store';
 import { routes } from '../routing/app.routes';
 import { provideEffects } from '@ngrx/effects';
 
@@ -17,7 +22,8 @@ export function createAppConfig(): ApplicationConfig {
       provideHttpClient(),
       provideStore(),
       provideState(robotTypeFeature),
-      provideEffects(RobotTypeEffects),
+      provideState(robotFeature),
+      provideEffects(RobotTypeEffects, RobotEffects),
       {
         provide: CONFIG_OPTIONS_TOKEN,
         useValue: getConfigOptions(),
