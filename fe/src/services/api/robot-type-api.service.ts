@@ -1,8 +1,9 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { RobotType, RobotTypeCreate } from '../../types';
-import { Observable } from 'rxjs';
+import { RobotType, RobotTypeCreate, RobotTypeUpdate } from '../../types';
+import { map, Observable, OperatorFunction } from 'rxjs';
 import { ConfigService } from '../../config/config.service';
+import type { Except } from 'type-fest';
 
 @Injectable({
   providedIn: 'root',
@@ -17,21 +18,32 @@ export class RobotTypeApiService {
     this.apiBaseUrl = this.configService.configOptions.apiBaseUrl;
   }
 
-  public getAllRobotTypes(): Observable<RobotType[]> {
-    return this.http.get<RobotType[]>(this.url('/api/robot_types'));
+  public getAllRobotTypes(): Observable<readonly RobotType[]> {
+    return this.http
+      .get<readonly RobotTypeDto[]>(this.url('/api/robot_types'))
+      .pipe(mapToModels());
   }
 
   public createRobotType(data: RobotTypeCreate): Observable<RobotType> {
-    return this.http.post<RobotType>(this.url('/api/robot_types'), data);
+    return this.http
+      .post<RobotTypeDto>(this.url('/api/robot_types'), modelToDtoCreate(data))
+      .pipe(mapToModel());
   }
 
   public getRobotType(id: number): Observable<RobotType> {
-    return this.http.get<RobotType>(this.url(`/api/robot_types/${id}`));
+    return this.http
+      .get<RobotTypeDto>(this.url(`/api/robot_types/${id}`))
+      .pipe(mapToModel());
   }
 
-  public updateRobotType(data: RobotType): Observable<RobotType> {
+  public updateRobotType(data: RobotTypeUpdate): Observable<RobotType> {
     const { id } = data;
-    return this.http.put<RobotType>(this.url(`/api/robot_types/${id}`), data);
+    return this.http
+      .put<RobotTypeDto>(
+        this.url(`/api/robot_types/${id}`),
+        modelToDtoUpdate(data),
+      )
+      .pipe(mapToModel());
   }
 
   public deleteRobotType(id: number): Observable<void> {
@@ -42,3 +54,38 @@ export class RobotTypeApiService {
     return this.apiBaseUrl + path;
   }
 }
+
+interface RobotTypeDto {
+  readonly id: number;
+  readonly name: string;
+  readonly dimensions: string;
+  readonly created_at: string;
+  readonly updated_at: string;
+}
+
+type RobotTypeCreateDto = Except<
+  RobotTypeDto,
+  'id' | 'created_at' | 'updated_at'
+>;
+
+type RobotTypeUpdateDto = Except<RobotTypeDto, 'created_at' | 'updated_at'>;
+
+function dtoToModel(dto: RobotTypeDto): RobotType {
+  return dto;
+}
+
+function modelToDtoCreate(model: RobotTypeCreate): RobotTypeCreateDto {
+  return model;
+}
+
+function modelToDtoUpdate(model: RobotTypeUpdate): RobotTypeUpdateDto {
+  return model;
+}
+
+const mapToModel = (): OperatorFunction<RobotTypeDto, RobotType> =>
+  map((dto) => dtoToModel(dto));
+
+const mapToModels = (): OperatorFunction<
+  readonly RobotTypeDto[],
+  readonly RobotType[]
+> => map((dtos) => dtos.map((dto) => dtoToModel(dto)));

@@ -5,3 +5,4 @@ export interface RobotType {
 }
 
 export type RobotTypeCreate = Omit<RobotType, 'id'>;
+export type RobotTypeUpdate = RobotType;

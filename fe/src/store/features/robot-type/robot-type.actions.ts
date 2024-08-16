@@ -1,5 +1,5 @@
 import { createActionGroup, emptyProps, props } from '@ngrx/store';
-import { RobotType, RobotTypeCreate } from '../../../types';
+import { RobotType, RobotTypeCreate, RobotTypeUpdate } from '../../../types';
 import { ActionPayload, DeleteData, ErrorData } from '../../types';
 
 export const RobotTypeActions = createActionGroup({
@@ -17,7 +17,7 @@ export const RobotTypeActions = createActionGroup({
     'Get Pending': emptyProps(),
     'Get Success': props<ActionPayload<RobotType>>(),
     'Get Error': props<ErrorData>(),
-    Update: props<ActionPayload<RobotType>>(),
+    Update: props<ActionPayload<RobotTypeUpdate>>(),
     'Update Pending': emptyProps(),
     'Update Success': props<ActionPayload<RobotType>>(),
     'Update Error': props<ErrorData>(),
