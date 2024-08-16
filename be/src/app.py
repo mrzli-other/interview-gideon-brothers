@@ -5,6 +5,7 @@ from flask_apispec import FlaskApiSpec
 from flask_swagger_ui import get_swaggerui_blueprint
 from container import DependencyContainer
 from controllers import RobotTypes, RobotType, Robots, Robot
+from traceback import print_exc
 
 def create_app():
     app = Flask(__name__)
@@ -89,6 +90,7 @@ def _setup_swagger(app):
     app.register_blueprint(swaggerui_blueprint, url_prefix=SWAGGER_URL)
 
 def _handle_error(error):
+    print_exc()
     response = {
         "message": str(error),
         "type": error.__class__.__name__
