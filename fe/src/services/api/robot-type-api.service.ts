@@ -1,8 +1,8 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { RobotType, RobotTypeCreate } from '../types';
+import { RobotType, RobotTypeCreate } from '../../types';
 import { Observable } from 'rxjs';
-import { ConfigService } from '../config/config.service';
+import { ConfigService } from '../../config/config.service';
 
 @Injectable({
   providedIn: 'root',
