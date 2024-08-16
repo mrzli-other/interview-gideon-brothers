@@ -70,26 +70,26 @@ function dtoToModel(dto: RobotDto): Robot {
   return {
     id,
     name,
-    robotType: robot_type_id,
+    robotTypeId: robot_type_id,
   };
 }
 
 function modelToDtoCreate(model: RobotCreate): RobotCreateDto {
-  const { name, robotType } = model;
+  const { name, robotTypeId } = model;
 
   return {
     name,
-    robot_type_id: robotType,
+    robot_type_id: robotTypeId,
   };
 }
 
 function modelToDtoUpdate(model: RobotUpdate): RobotUpdateDto {
-  const { id, name, robotType } = model;
+  const { id, name, robotTypeId } = model;
 
   return {
     id,
     name,
-    robot_type_id: robotType,
+    robot_type_id: robotTypeId,
   };
 }
 
