@@ -3,3 +3,5 @@ export interface Robot {
   readonly name: string;
   readonly robotType: number;
 }
+
+export type RobotCreate = Omit<Robot, 'id'>;
