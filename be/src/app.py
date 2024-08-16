@@ -3,42 +3,61 @@ from flask_cors import CORS
 from flask_restful import Api
 from flask_apispec import FlaskApiSpec
 from flask_swagger_ui import get_swaggerui_blueprint
-from robot_types import RobotTypes, RobotType
-from robots import Robots, Robot
+from controllers import RobotTypes, RobotType, Robots, Robot
+from config import get_config
 
 def create_app():
     app = Flask(__name__)
     CORS(app)
 
+    config = get_config()
+
+    resource_args = { 'config': config }
+
+    # setup routes
     api_bp = Blueprint('api', __name__, url_prefix='/api')
     api = Api(api_bp)
 
-    # Routes for robot types
-    api.add_resource(RobotTypes, '/robot_types', endpoint='robot_types')
-    api.add_resource(RobotType, '/robot_types/<int:id>', endpoint='robot_type')
+    api.add_resource(
+        RobotTypes,
+        '/robot_types',
+        endpoint='robot_types',
+        resource_class_kwargs=resource_args
+    )
+    api.add_resource(
+        RobotType,
+        '/robot_types/<int:id>',
+        endpoint='robot_type',
+        resource_class_kwargs=resource_args
+    )
 
-    # Routes for robots
-    api.add_resource(Robots, '/robots', endpoint='robots')
-    api.add_resource(Robot, '/robots/<int:id>', endpoint='robot')
+    api.add_resource(
+        Robots,
+        '/robots',
+        endpoint='robots',
+        resource_class_kwargs=resource_args
+    )
+    api.add_resource(
+        Robot,
+        '/robots/<int:id>',
+        endpoint='robot',
+        resource_class_kwargs=resource_args
+    )
 
-    # Register blueprint
     app.register_blueprint(api_bp)
 
-    # Setup Flask-apispec
+    # setup swagger
     docs = FlaskApiSpec(app)
 
-    # Register resources with Flask-apispec
     docs.register(RobotTypes, blueprint='api', endpoint='robot_types')
     docs.register(RobotType, blueprint='api', endpoint='robot_type')
     docs.register(Robots, blueprint='api', endpoint='robots')
     docs.register(Robot, blueprint='api', endpoint='robot')
 
-    # Serve the Swagger JSON
     @app.route('/swagger.json')
     def swagger_json():
         return jsonify(docs.spec.to_dict())
 
-    # Setup Swagger UI
     _setup_swagger(app)
 
     return app

@@ -1,4 +1,4 @@
-from flask_restful import Resource, reqparse
+from flask_restful import Resource
 from flask_apispec import MethodResource, doc, use_kwargs, marshal_with
 from marshmallow import Schema, fields, validate
 
@@ -41,9 +41,13 @@ def get_next_id(items, key):
     return 1
 
 class RobotTypes(MethodResource, Resource):
+    def __init__(self, config):
+        self.config = config
+
     @doc(description='Get all robot types', tags=['Robot Types'])
     @marshal_with(RobotTypeSchema(many=True))
     def get(self):
+        print(self.config)
         return robot_types, 200
 
     @doc(description='Create a new robot type', tags=['Robot Types'])
@@ -59,6 +63,9 @@ class RobotTypes(MethodResource, Resource):
         return robot_type, 201
 
 class RobotType(MethodResource, Resource):
+    def __init__(self, config):
+        self.config = config
+
     @doc(description='Get a robot type by ID', tags=['Robot Types'])
     @marshal_with(RobotTypeSchema)
     def get(self, id):
