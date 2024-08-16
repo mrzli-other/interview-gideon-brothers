@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 
 @Component({
-  selector: '[rm-button]',
+  selector: 'button[rm-button]',
   template: '<ng-content></ng-content>',
   styles: [
     ':host[rm-button] { @apply font-semibold border px-3 py-1 rounded; }',

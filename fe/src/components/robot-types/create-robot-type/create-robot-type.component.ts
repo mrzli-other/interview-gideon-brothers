@@ -8,11 +8,12 @@ import {
 import { Store } from '@ngrx/store';
 import { RobotTypeActions } from '../../../store';
 import { RobotTypeCreate } from '../../../types';
+import { RmButtonComponent, RmTextInputComponent } from '../../shared';
 
 @Component({
   selector: 'create-robot-type',
   standalone: true,
-  imports: [ReactiveFormsModule],
+  imports: [ReactiveFormsModule, RmButtonComponent, RmTextInputComponent],
   templateUrl: './create-robot-type.component.html',
 })
 export class CreateRobotTypeComponent {
@@ -23,9 +24,9 @@ export class CreateRobotTypeComponent {
       Validators.maxLength(255),
     ]),
     dimensions: new FormControl('', [
-      // Validators.required,
-      // Validators.minLength(1),
-      // Validators.maxLength(4096),
+      Validators.required,
+      Validators.minLength(1),
+      Validators.maxLength(4096),
     ]),
   });
 
