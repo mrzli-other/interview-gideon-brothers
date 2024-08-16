@@ -1,8 +1,8 @@
 from .database import Database
 
 class RobotDao:
-    def __init__(self, db_config):
-        self.db = Database(db_config)
+    def __init__(self, container):
+        self.db = container.get_database()
 
     def fetch_all(self):
         query = "SELECT id, name, robot_type_id, created_at, updated_at FROM robot"
@@ -33,6 +33,3 @@ class RobotDao:
         query = "DELETE FROM robot WHERE id = %s"
         self.db.cursor.execute(query, (robot_id,))
         self.db.connection.commit()
-
-    def close(self):
-        self.db.close()

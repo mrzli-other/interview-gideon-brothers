@@ -17,9 +17,6 @@ class DependencyContainer:
       lambda: get_config()
     )
   
-  def get_db_config(self):
-    return self.get_config()['db']
-  
   def get_robot_type_service(self):
     return _get_cached_or_calculate(
       self.robot_type_service,
@@ -29,7 +26,7 @@ class DependencyContainer:
   def get_robot_type_dao(self):
     return _get_cached_or_calculate(
       self.robot_type_dao,
-      lambda: RobotTypeDao(self.get_db_config())
+      lambda: RobotTypeDao(self)
     )
   
   def get_robot_service(self):
@@ -41,14 +38,17 @@ class DependencyContainer:
   def get_robot_dao(self):
     return _get_cached_or_calculate(
       self.robot_dao,
-      lambda: RobotDao(self.get_db_config())
+      lambda: RobotDao(self)
     )
   
   def get_database(self):
     return _get_cached_or_calculate(
       self.database,
-      lambda: Database(self.get_db_config())
+      lambda: Database(self._get_db_config())
     )
+  
+  def _get_db_config(self):
+    return self.get_config()['db']
   
 def _get_cached_or_calculate(value, func):
   if value is None:
