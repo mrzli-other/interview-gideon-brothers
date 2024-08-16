@@ -3,6 +3,7 @@ from flask_cors import CORS
 from flask_restful import Api
 from flask_apispec import FlaskApiSpec
 from flask_swagger_ui import get_swaggerui_blueprint
+from container import DependencyContainer
 from controllers import RobotTypes, RobotType, Robots, Robot
 from config import get_config
 
@@ -12,7 +13,7 @@ def create_app():
 
     config = get_config()
 
-    resource_args = { 'config': config }
+    resource_args = { 'container': DependencyContainer() }
 
     # setup routes
     api_bp = Blueprint('api', __name__, url_prefix='/api')

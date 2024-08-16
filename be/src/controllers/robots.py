@@ -10,8 +10,9 @@ class RobotSchema(Schema):
     robot_type_id = fields.Int(required=True)
 
 class Robots(MethodResource, Resource):
-    def __init__(self, config):
-        self.config = config
+    def __init__(self, container):
+        self.container = container
+        self.dao = container.get_robot_dao()
 
     @doc(description='Get all robots', tags=['Robots'])
     @marshal_with(RobotSchema(many=True))
@@ -31,8 +32,9 @@ class Robots(MethodResource, Resource):
         return robot, 201
 
 class Robot(MethodResource, Resource):
-    def __init__(self, config):
-        self.config = config
+    def __init__(self, container):
+        self.container = container
+        self.dao = container.get_robot_dao()
 
     @doc(description='Get a robot by ID', tags=['Robots'])
     @marshal_with(RobotSchema)

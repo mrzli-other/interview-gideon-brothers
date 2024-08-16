@@ -1,8 +1,7 @@
-from flask import jsonify
 from flask_restful import Resource
 from flask_apispec import MethodResource, doc, use_kwargs, marshal_with
 from marshmallow import Schema, fields, validate
-from db import RobotTypeDao
+from util.date import to_iso_utc
 
 class RobotTypeSchema(Schema):
     id = fields.Int(dump_only=True)
@@ -12,9 +11,9 @@ class RobotTypeSchema(Schema):
     updated_at = fields.Str(dump_only=True)
 
 class RobotTypes(MethodResource, Resource):
-    def __init__(self, config):
-        self.config = config
-        self.dao = RobotTypeDao(config['db'])
+    def __init__(self, container):
+        self.container = container
+        self.dao = container.get_robot_type_dao()
 
     @doc(description='Get all robot types', tags=['Robot Types'])
     @marshal_with(RobotTypeSchema(many=True))
@@ -34,9 +33,9 @@ class RobotTypes(MethodResource, Resource):
         return robot_type, 201
 
 class RobotType(MethodResource, Resource):
-    def __init__(self, config):
-        self.config = config
-        self.dao = RobotTypeDao(config['db'])
+    def __init__(self, container):
+        self.container = container
+        self.dao = container.get_robot_type_dao()
 
     @doc(description='Get a robot type by ID', tags=['Robot Types'])
     @marshal_with(RobotTypeSchema)
@@ -65,6 +64,6 @@ def _tuple_to_dict(t):
         'id': t[0],
         'name': t[1],
         'dimensions': t[2],
-        'created_at': t[3].isoformat(),
-        'updated_at': t[4].isoformat(),
+        'created_at': to_iso_utc(t[3]),
+        'updated_at': to_iso_utc(t[4]),
     }
