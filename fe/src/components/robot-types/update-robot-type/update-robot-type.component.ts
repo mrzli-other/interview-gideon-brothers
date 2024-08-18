@@ -1,10 +1,10 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { map, withLatestFrom, Subscription, combineLatest } from 'rxjs';
+import { map, Subscription, combineLatest } from 'rxjs';
 import { getIntParam, isFormFieldError } from '../../util';
 import { Store } from '@ngrx/store';
 import { RobotTypeActions, robotTypeFeature } from '../../../store';
-import { RobotType, RobotTypeCreate, RobotTypeUpdate } from '../../../types';
+import { RobotType, RobotTypeUpdate } from '../../../types';
 import {
   FormGroup,
   Validators,
