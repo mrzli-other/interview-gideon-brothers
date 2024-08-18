@@ -10,12 +10,14 @@ import { NG_VALUE_ACCESSOR, ControlValueAccessor } from '@angular/forms';
 import { NgClass } from '@angular/common';
 import { Point } from '../../../../types';
 import paper from 'paper';
+import { MatIcon } from '@angular/material/icon';
+import { pointListToPolygonString, round } from '../../../../util';
 
 @Component({
   selector: 'rm-dimensions',
   templateUrl: './rm-dimensions.component.html',
   standalone: true,
-  imports: [NgClass],
+  imports: [NgClass, MatIcon],
   providers: [
     {
       provide: NG_VALUE_ACCESSOR,
@@ -50,7 +52,13 @@ export class RmDimensionsComponent
 
   public ngAfterViewInit(): void {
     if (this.canvasRef !== undefined) {
+      // prevent opening of menu on right click
+      this.canvasRef.nativeElement.oncontextmenu = (event: MouseEvent) => {
+        event.preventDefault();
+      };
+
       paper.setup(this.canvasRef.nativeElement);
+      paper.view.onMouseDown = this.handlePaperClick.bind(this);
     } else {
       console.error('Canvas not found.');
     }
@@ -58,7 +66,7 @@ export class RmDimensionsComponent
   }
 
   public getDisplayValue(): string {
-    return JSON.stringify(this.value);
+    return pointListToPolygonString(this.value);
   }
 
   public writeValue(value: readonly Point[]): void {
@@ -77,45 +85,69 @@ export class RmDimensionsComponent
     this.disabled = isDisabled;
   }
 
-  public onChange: ChangeFn = EMPTY_FN;
-  public onTouched: TouchedFn = EMPTY_FN;
+  public handlePaperClick(event: paper.MouseEvent): void {
+    event.preventDefault();
 
-  private draw(): void {
     const canvas = this.canvasRef?.nativeElement;
-    if (!paper.project || !canvas) {
+    if (!canvas) {
       return;
     }
 
-    paper.project.clear();
+    console.log(event);
 
-    const value = this.value;
-    const width = canvas.width;
-    const height = canvas.height;
+    this.handleAddPoint(event);
+  }
 
-    const polygon = new paper.Path({
-      strokeColor: 'black',
-      closed: true,
-    });
+  public handleAddPoint(event: paper.MouseEvent): void {
+    event.preventDefault();
 
-    for (let dataPoint of value) {
-      const point = new paper.Point(dataPoint.x * width, dataPoint.y * height);
-
-      const accentuatedPoint = new paper.Path.Circle({
-        center: point,
-        radius: 3,
-        fillColor: 'black',
-      });
-
-      polygon.add(point);
+    const canvas = this.canvasRef?.nativeElement;
+    if (!canvas) {
+      return;
     }
+
+    const canvasPoint: Point = {
+      x: event.point.x,
+      y: event.point.y,
+    };
+
+    const normalizedPoint = canvasToNormalizedPoint(canvasPoint, canvas);
+
+    const value: readonly Point[] = [...this.value, normalizedPoint];
+    this.setValue(value);
+  }
+
+  public handleRemoveLastPoint(event: MouseEvent): void {
+    event.preventDefault();
+    const value = this.value.slice(0, -1);
+    this.setValue(value);
+  }
+
+  public clearAllPoints(event: MouseEvent): void {
+    event.preventDefault();
+    this.setValue([]);
+  }
+
+  private onChange: ChangeFn = EMPTY_FN;
+  private onTouched: TouchedFn = EMPTY_FN;
+
+  private draw(): void {
+    const canvas = this.canvasRef?.nativeElement;
+    if (!canvas) {
+      return;
+    }
+
+    draw(paper, canvas, this.value);
   }
 
   private setValue(value: readonly Point[]): void {
-    this.markAsTouched();
-    if (!this.disabled) {
-      this.value = value;
-      this.onChange(value);
+    if (this.disabled) {
+      return;
     }
+
+    this.value = value;
+    this.onChange(this.value);
+    this.markAsTouched();
   }
 
   private markAsTouched(): void {
@@ -133,3 +165,59 @@ const EMPTY_FN = () => {};
 
 const DEFAULT_WIDTH = 200;
 const DEFAULT_HEIGHT = 200;
+
+function draw(
+  paper: paper.PaperScope,
+  canvas: HTMLCanvasElement,
+  points: readonly Point[],
+): void {
+  if (!paper.project) {
+    return;
+  }
+
+  paper.project.clear();
+
+  const canvasPoints = points.map((point) =>
+    normalizedToCanvasPoint(point, canvas),
+  );
+
+  const polygon = new paper.Path({
+    strokeColor: 'black',
+    closed: true,
+  });
+
+  for (let canvasPoint of canvasPoints) {
+    const point = new paper.Point(canvasPoint.x, canvasPoint.y);
+
+    new paper.Path.Circle({
+      center: point,
+      radius: 3,
+      fillColor: 'black',
+    });
+
+    polygon.add(point);
+  }
+}
+
+function canvasToNormalizedPoint(
+  point: Point,
+  canvas: HTMLCanvasElement,
+): Point {
+  return {
+    x: round(point.x / canvas.width, NORMALIZED_POINT_PRECISION),
+    y: round(point.y / canvas.height, NORMALIZED_POINT_PRECISION),
+  };
+}
+
+// not necesasry, but makes numbers easier to read
+const NORMALIZED_POINT_PRECISION = 3;
+
+function normalizedToCanvasPoint(
+  point: Point,
+  canvas: HTMLCanvasElement,
+): Point {
+  return {
+    x: point.x * canvas.width,
+    y: point.y * canvas.height,
+  };
+}

@@ -5,3 +5,8 @@ export function parseIntOrThrow(value: string): number {
   }
   return result;
 }
+
+export function round(value: number, digits: number): number {
+  const factor = 10 ** digits;
+  return Math.round(value * factor) / factor;
+}
