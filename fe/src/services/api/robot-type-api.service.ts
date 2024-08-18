@@ -4,6 +4,7 @@ import { RobotType, RobotTypeCreate, RobotTypeUpdate } from '../../types';
 import { map, Observable, OperatorFunction } from 'rxjs';
 import { ConfigService } from '../../config/config.service';
 import type { Except } from 'type-fest';
+import { pointListToPolygonString, polygonStringToPointList } from '../../util';
 
 @Injectable({
   providedIn: 'root',
@@ -79,7 +80,7 @@ function dtoToModel(dto: RobotTypeDto): RobotType {
   return {
     id,
     name,
-    dimensions,
+    dimensions: polygonStringToPointList(dimensions),
   };
 }
 
@@ -88,7 +89,7 @@ function modelToDtoCreate(model: RobotTypeCreate): RobotTypeCreateDto {
 
   return {
     name,
-    dimensions,
+    dimensions: pointListToPolygonString(dimensions),
   };
 }
 
@@ -97,7 +98,7 @@ function modelToDtoUpdate(model: RobotTypeUpdate): RobotTypeUpdateDto {
 
   return {
     name,
-    dimensions,
+    dimensions: pointListToPolygonString(dimensions),
   };
 }
 
