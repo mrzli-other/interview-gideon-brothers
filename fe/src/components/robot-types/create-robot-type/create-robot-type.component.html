@@ -18,14 +18,13 @@
     </div>
     <div class="flex flex-col">
       <label for="dimensions" class="text-sm">Dimensions</label>
-      <input
-        rm-text-input
-        type="text"
+      <rm-dimensions
+        [width]="300"
+        [height]="300"
+        [isError]="isError('dimensions')"
         id="dimensions"
         formControlName="dimensions"
-        [isError]="isError('dimensions')"
-        autocomplete="off"
-      />
+      ></rm-dimensions>
     </div>
     <button
       rm-button

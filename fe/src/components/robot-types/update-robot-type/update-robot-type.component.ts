@@ -4,23 +4,39 @@ import { map, Subscription, combineLatest } from 'rxjs';
 import { getIntParam, isFormFieldError } from '../../util';
 import { Store } from '@ngrx/store';
 import { RobotTypeActions, robotTypeFeature } from '../../../store';
-import { RobotType, RobotTypeUpdate } from '../../../types';
+import { Point, RobotType, RobotTypeUpdate } from '../../../types';
 import {
   FormGroup,
   Validators,
-  FormBuilder,
   ReactiveFormsModule,
+  FormControl,
 } from '@angular/forms';
-import { RmButtonComponent, RmTextInputComponent } from '../../shared';
+import {
+  RmButtonComponent,
+  RmDimensionsComponent,
+  RmTextInputComponent,
+} from '../../shared';
 
 @Component({
   selector: 'update-robot-type',
   standalone: true,
-  imports: [ReactiveFormsModule, RmButtonComponent, RmTextInputComponent],
+  imports: [
+    ReactiveFormsModule,
+    RmButtonComponent,
+    RmTextInputComponent,
+    RmDimensionsComponent,
+  ],
   templateUrl: './update-robot-type.component.html',
 })
 export class UpdateRobotTypeComponent implements OnInit, OnDestroy {
-  public form: FormGroup = new FormGroup({});
+  public form = new FormGroup({
+    name: new FormControl<string>('', [
+      Validators.required,
+      Validators.minLength(1),
+      Validators.maxLength(255),
+    ]),
+    dimensions: new FormControl<readonly Point[]>([], [Validators.required]),
+  });
 
   public robotType: RobotType | undefined = undefined;
 
@@ -29,7 +45,6 @@ export class UpdateRobotTypeComponent implements OnInit, OnDestroy {
   public constructor(
     private readonly route: ActivatedRoute,
     private readonly store: Store,
-    private readonly fb: FormBuilder,
   ) {}
 
   public ngOnInit(): void {
@@ -51,23 +66,9 @@ export class UpdateRobotTypeComponent implements OnInit, OnDestroy {
       .subscribe((robotType: RobotType | undefined) => {
         this.robotType = robotType;
 
-        this.form = this.fb.group({
-          name: [
-            robotType?.name ?? '',
-            [
-              Validators.required,
-              Validators.minLength(1),
-              Validators.maxLength(255),
-            ],
-          ],
-          dimensions: [
-            robotType?.dimensions ?? '',
-            [
-              Validators.required,
-              Validators.minLength(1),
-              Validators.maxLength(4096),
-            ],
-          ],
+        this.form.setValue({
+          name: robotType?.name ?? '',
+          dimensions: robotType?.dimensions ?? [],
         });
       });
   }
@@ -84,7 +85,7 @@ export class UpdateRobotTypeComponent implements OnInit, OnDestroy {
     const data: RobotTypeUpdate = {
       id: this.robotType.id,
       name: this.form.value.name ?? '',
-      dimensions: this.form.value.dimensions ?? '',
+      dimensions: this.form.value.dimensions ?? [],
     };
 
     this.store.dispatch(RobotTypeActions.update({ payload: data }));

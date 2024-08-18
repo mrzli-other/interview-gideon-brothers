@@ -7,28 +7,33 @@ import {
 } from '@angular/forms';
 import { Store } from '@ngrx/store';
 import { RobotTypeActions } from '../../../store';
-import { RobotTypeCreate } from '../../../types';
-import { RmButtonComponent, RmTextInputComponent } from '../../shared';
+import { Point, RobotTypeCreate } from '../../../types';
+import {
+  RmButtonComponent,
+  RmDimensionsComponent,
+  RmTextInputComponent,
+} from '../../shared';
 import { isFormFieldError } from '../../util';
 
 @Component({
   selector: 'create-robot-type',
   standalone: true,
-  imports: [ReactiveFormsModule, RmButtonComponent, RmTextInputComponent],
+  imports: [
+    ReactiveFormsModule,
+    RmButtonComponent,
+    RmTextInputComponent,
+    RmDimensionsComponent,
+  ],
   templateUrl: './create-robot-type.component.html',
 })
 export class CreateRobotTypeComponent {
-  public readonly form = new FormGroup({
-    name: new FormControl('', [
+  public form = new FormGroup({
+    name: new FormControl<string>('', [
       Validators.required,
       Validators.minLength(1),
       Validators.maxLength(255),
     ]),
-    dimensions: new FormControl('', [
-      Validators.required,
-      Validators.minLength(1),
-      Validators.maxLength(4096),
-    ]),
+    dimensions: new FormControl<readonly Point[]>([], [Validators.required]),
   });
 
   public constructor(private readonly store: Store) {}
@@ -40,7 +45,7 @@ export class CreateRobotTypeComponent {
 
     const data: RobotTypeCreate = {
       name: this.form.value.name ?? '',
-      dimensions: this.form.value.dimensions ?? '',
+      dimensions: this.form.value.dimensions ?? [],
     };
 
     this.store.dispatch(RobotTypeActions.create({ payload: data }));
