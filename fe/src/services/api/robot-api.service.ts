@@ -62,7 +62,7 @@ interface RobotDto {
 
 type RobotCreateDto = Except<RobotDto, 'id' | 'created_at' | 'updated_at'>;
 
-type RobotUpdateDto = Except<RobotDto, 'created_at' | 'updated_at'>;
+type RobotUpdateDto = Except<RobotDto, 'id' | 'created_at' | 'updated_at'>;
 
 function dtoToModel(dto: RobotDto): Robot {
   const { id, name, robot_type_id } = dto;
@@ -84,10 +84,9 @@ function modelToDtoCreate(model: RobotCreate): RobotCreateDto {
 }
 
 function modelToDtoUpdate(model: RobotUpdate): RobotUpdateDto {
-  const { id, name, robotTypeId } = model;
+  const { name, robotTypeId } = model;
 
   return {
-    id,
     name,
     robot_type_id: robotTypeId,
   };

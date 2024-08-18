@@ -68,18 +68,37 @@ type RobotTypeCreateDto = Except<
   'id' | 'created_at' | 'updated_at'
 >;
 
-type RobotTypeUpdateDto = Except<RobotTypeDto, 'created_at' | 'updated_at'>;
+type RobotTypeUpdateDto = Except<
+  RobotTypeDto,
+  'id' | 'created_at' | 'updated_at'
+>;
 
 function dtoToModel(dto: RobotTypeDto): RobotType {
-  return dto;
+  const { id, name, dimensions } = dto;
+
+  return {
+    id,
+    name,
+    dimensions,
+  };
 }
 
 function modelToDtoCreate(model: RobotTypeCreate): RobotTypeCreateDto {
-  return model;
+  const { name, dimensions } = model;
+
+  return {
+    name,
+    dimensions,
+  };
 }
 
 function modelToDtoUpdate(model: RobotTypeUpdate): RobotTypeUpdateDto {
-  return model;
+  const { name, dimensions } = model;
+
+  return {
+    name,
+    dimensions,
+  };
 }
 
 const mapToModel = (): OperatorFunction<RobotTypeDto, RobotType> =>
