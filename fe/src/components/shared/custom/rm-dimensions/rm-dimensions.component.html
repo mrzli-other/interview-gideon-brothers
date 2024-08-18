@@ -1,25 +1,27 @@
-<div>
-  <div class="relative inline-flex">
-    <canvas
-      #canvas
-      [width]="width"
-      [height]="height"
-      [ngClass]="{
-        'bg-gray-50': true,
-        border: true,
-        'border-red-400': isError,
-      }"
-    ></canvas>
-    <div class="absolute top-2 right-2">
-      <button (click)="handleRemoveLastPoint($event)">
-        <mat-icon class="text-[1.2rem]">backspace</mat-icon>
-      </button>
-      <button (click)="clearAllPoints($event)">
-        <mat-icon class="text-[1.2rem]">delete_forever</mat-icon>
-      </button>
+<div class="flex flex-col gap-1">
+  <div class="flex">
+    <div class="relative inline-flex">
+      <canvas
+        #canvas
+        [width]="width"
+        [height]="height"
+        [ngClass]="{
+          'bg-gray-50': true,
+          border: true,
+          'border-red-400': isError,
+        }"
+      ></canvas>
+      <div class="absolute top-2 right-2">
+        <button (click)="handleRemoveLastPoint($event)">
+          <mat-icon class="text-[1.2rem]">backspace</mat-icon>
+        </button>
+        <button (click)="clearAllPoints($event)">
+          <mat-icon class="text-[1.2rem]">delete_forever</mat-icon>
+        </button>
+      </div>
     </div>
   </div>
-  <div>
-    <pre class="border bg-gray-50 inline text-sm">{{ getDisplayValue() }}</pre>
+  <div class="flex">
+    <pre class="border bg-gray-50 inline text-xs">{{ getDisplayValue() }}</pre>
   </div>
 </div>
