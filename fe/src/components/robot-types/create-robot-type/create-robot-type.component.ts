@@ -9,6 +9,7 @@ import { Store } from '@ngrx/store';
 import { RobotTypeActions } from '../../../store';
 import { RobotTypeCreate } from '../../../types';
 import { RmButtonComponent, RmTextInputComponent } from '../../shared';
+import { isFormFieldError } from '../../util';
 
 @Component({
   selector: 'create-robot-type',
@@ -46,11 +47,6 @@ export class CreateRobotTypeComponent {
   }
 
   public isError(field: string): boolean {
-    const control = this.form.get(field) ?? undefined;
-    return (
-      control !== undefined &&
-      control.invalid &&
-      (control.touched || control.dirty)
-    );
+    return isFormFieldError(this.form, field);
   }
 }
