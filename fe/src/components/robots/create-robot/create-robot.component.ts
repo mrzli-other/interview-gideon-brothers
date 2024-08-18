@@ -14,7 +14,6 @@ import { Store } from '@ngrx/store';
 import { RobotActions, robotTypeFeature } from '../../../store';
 import { RobotCreate, RobotType } from '../../../types';
 import { isFormFieldError } from '../../util';
-import { parseIntOrThrow, transformIfNotUndefined } from '../../../util';
 import { map, Observable, of } from 'rxjs';
 import { AsyncPipe } from '@angular/common';
 
@@ -39,7 +38,7 @@ export class CreateRobotComponent implements OnInit {
       Validators.minLength(1),
       Validators.maxLength(255),
     ]),
-    robotTypeId: new FormControl('', [
+    robotTypeId: new FormControl(0, [
       Validators.required,
       Validators.pattern(/^[1-9]\d{0,10}$/),
     ]),
@@ -58,10 +57,7 @@ export class CreateRobotComponent implements OnInit {
       return;
     }
 
-    const robotTypeId = transformIfNotUndefined(
-      this.form.value.robotTypeId ?? undefined,
-      parseIntOrThrow,
-    );
+    const robotTypeId = this.form.value.robotTypeId ?? undefined;
 
     if (robotTypeId === undefined) {
       return;
