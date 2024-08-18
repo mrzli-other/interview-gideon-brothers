@@ -1,7 +1,15 @@
-import { Component, forwardRef, Input } from '@angular/core';
+import {
+  AfterViewInit,
+  Component,
+  ElementRef,
+  forwardRef,
+  Input,
+  ViewChild,
+} from '@angular/core';
 import { NG_VALUE_ACCESSOR, ControlValueAccessor } from '@angular/forms';
 import { NgClass } from '@angular/common';
 import { Point } from '../../../../types';
+import paper from 'paper';
 
 @Component({
   selector: 'rm-dimensions',
@@ -16,14 +24,38 @@ import { Point } from '../../../../types';
     },
   ],
 })
-export class RmDimensionsComponent implements ControlValueAccessor {
+export class RmDimensionsComponent
+  implements ControlValueAccessor, AfterViewInit
+{
   @Input() public width = DEFAULT_WIDTH;
   @Input() public height = DEFAULT_HEIGHT;
   @Input() public isError = true;
 
-  public value: readonly Point[] = [];
+  @ViewChild('canvas', { static: true })
+  private canvasRef: ElementRef<HTMLCanvasElement> | undefined;
+
+  private _value: readonly Point[] = [];
+
+  public get value(): readonly Point[] {
+    return this._value;
+  }
+
+  public set value(value: readonly Point[]) {
+    this._value = value;
+    this.draw();
+  }
+
   public touched = false;
   public disabled = false;
+
+  public ngAfterViewInit(): void {
+    if (this.canvasRef !== undefined) {
+      paper.setup(this.canvasRef.nativeElement);
+    } else {
+      console.error('Canvas not found.');
+    }
+    this.draw();
+  }
 
   public getDisplayValue(): string {
     return JSON.stringify(this.value);
@@ -47,6 +79,36 @@ export class RmDimensionsComponent implements ControlValueAccessor {
 
   public onChange: ChangeFn = EMPTY_FN;
   public onTouched: TouchedFn = EMPTY_FN;
+
+  private draw(): void {
+    const canvas = this.canvasRef?.nativeElement;
+    if (!paper.project || !canvas) {
+      return;
+    }
+
+    paper.project.clear();
+
+    const value = this.value;
+    const width = canvas.width;
+    const height = canvas.height;
+
+    const polygon = new paper.Path({
+      strokeColor: 'black',
+      closed: true,
+    });
+
+    for (let dataPoint of value) {
+      const point = new paper.Point(dataPoint.x * width, dataPoint.y * height);
+
+      const accentuatedPoint = new paper.Path.Circle({
+        center: point,
+        radius: 3,
+        fillColor: 'black',
+      });
+
+      polygon.add(point);
+    }
+  }
 
   private setValue(value: readonly Point[]): void {
     this.markAsTouched();
