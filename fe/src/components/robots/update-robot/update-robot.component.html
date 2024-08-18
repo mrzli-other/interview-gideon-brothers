@@ -18,15 +18,23 @@
         />
       </div>
       <div class="flex flex-col">
-        <label for="robotTypeId" class="text-sm">Robot Type Id</label>
-        <input
-          rm-text-input
+        <label for="robotTypeId" class="text-sm">Robot Type</label>
+        <select
+          rm-select
           type="text"
           id="robotTypeId"
           formControlName="robotTypeId"
           [isError]="isError('robotTypeId')"
           autocomplete="off"
-        />
+        >
+          @for (
+            item of robotTypes$ | async;
+            track item.id;
+            let first = $first
+          ) {
+            <option value="{{ item.id }}">{{ item.name }}</option>
+          }
+        </select>
       </div>
       <button
         rm-button

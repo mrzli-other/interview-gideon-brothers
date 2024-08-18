@@ -1,24 +1,38 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import {
   FormControl,
   FormGroup,
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { RmButtonComponent, RmTextInputComponent } from '../../shared';
+import {
+  RmButtonComponent,
+  RmSelectComponent,
+  RmTextInputComponent,
+} from '../../shared';
 import { Store } from '@ngrx/store';
-import { RobotActions } from '../../../store';
-import { RobotCreate } from '../../../types';
+import { RobotActions, robotTypeFeature } from '../../../store';
+import { RobotCreate, RobotType } from '../../../types';
 import { isFormFieldError } from '../../util';
 import { parseIntOrThrow, transformIfNotUndefined } from '../../../util';
+import { map, Observable, of } from 'rxjs';
+import { AsyncPipe } from '@angular/common';
 
 @Component({
   selector: 'create-robot',
   standalone: true,
-  imports: [ReactiveFormsModule, RmButtonComponent, RmTextInputComponent],
+  imports: [
+    AsyncPipe,
+    ReactiveFormsModule,
+    RmButtonComponent,
+    RmTextInputComponent,
+    RmSelectComponent,
+  ],
   templateUrl: './create-robot.component.html',
 })
-export class CreateRobotComponent {
+export class CreateRobotComponent implements OnInit {
+  public robotTypes$: Observable<readonly RobotType[]> = of([]);
+
   public readonly form = new FormGroup({
     name: new FormControl('', [
       Validators.required,
@@ -32,6 +46,12 @@ export class CreateRobotComponent {
   });
 
   public constructor(private readonly store: Store) {}
+
+  public ngOnInit(): void {
+    this.robotTypes$ = this.store
+      .select(robotTypeFeature.selectRobotTypes)
+      .pipe(map((robotTypes) => robotTypes ?? []));
+  }
 
   public handleSubmit(): void {
     if (this.form.invalid) {

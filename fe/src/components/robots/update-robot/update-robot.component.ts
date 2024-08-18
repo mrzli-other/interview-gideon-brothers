@@ -7,20 +7,33 @@ import {
 } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { Store } from '@ngrx/store';
-import { combineLatest, map, Subscription } from 'rxjs';
-import { robotFeature, RobotActions } from '../../../store';
-import { Robot, RobotUpdate } from '../../../types';
-import { RmButtonComponent, RmTextInputComponent } from '../../shared';
+import { combineLatest, map, Observable, of, Subscription } from 'rxjs';
+import { robotFeature, RobotActions, robotTypeFeature } from '../../../store';
+import { Robot, RobotType, RobotUpdate } from '../../../types';
+import {
+  RmButtonComponent,
+  RmSelectComponent,
+  RmTextInputComponent,
+} from '../../shared';
 import { getIntParam, isFormFieldError } from '../../util';
 import { transformIfNotUndefined, parseIntOrThrow } from '../../../util';
+import { AsyncPipe } from '@angular/common';
 
 @Component({
   selector: 'update-robot',
   standalone: true,
-  imports: [ReactiveFormsModule, RmButtonComponent, RmTextInputComponent],
+  imports: [
+    AsyncPipe,
+    ReactiveFormsModule,
+    RmButtonComponent,
+    RmTextInputComponent,
+    RmSelectComponent,
+  ],
   templateUrl: './update-robot.component.html',
 })
 export class UpdateRobotComponent implements OnInit, OnDestroy {
+  public robotTypes$: Observable<readonly RobotType[]> = of([]);
+
   public form: FormGroup = new FormGroup({});
 
   public robot: Robot | undefined = undefined;
@@ -34,6 +47,10 @@ export class UpdateRobotComponent implements OnInit, OnDestroy {
   ) {}
 
   public ngOnInit(): void {
+    this.robotTypes$ = this.store
+      .select(robotTypeFeature.selectRobotTypes)
+      .pipe(map((robotTypes) => robotTypes ?? []));
+
     this.robotSubscription = combineLatest([
       this.route.paramMap,
       this.store.select(robotFeature.selectRobots),
