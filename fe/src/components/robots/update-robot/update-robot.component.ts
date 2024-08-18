@@ -2,8 +2,8 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import {
   ReactiveFormsModule,
   FormGroup,
-  FormBuilder,
   Validators,
+  FormControl,
 } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { Store } from '@ngrx/store';
@@ -16,7 +16,6 @@ import {
   RmTextInputComponent,
 } from '../../shared';
 import { getIntParam, isFormFieldError } from '../../util';
-import { transformIfNotUndefined, parseIntOrThrow } from '../../../util';
 import { AsyncPipe } from '@angular/common';
 
 @Component({
@@ -34,7 +33,17 @@ import { AsyncPipe } from '@angular/common';
 export class UpdateRobotComponent implements OnInit, OnDestroy {
   public robotTypes$: Observable<readonly RobotType[]> = of([]);
 
-  public form: FormGroup = new FormGroup({});
+  public form = new FormGroup({
+    name: new FormControl('', [
+      Validators.required,
+      Validators.minLength(1),
+      Validators.maxLength(255),
+    ]),
+    robotTypeId: new FormControl(0, [
+      Validators.required,
+      Validators.pattern(/^[1-9]\d{0,10}$/),
+    ]),
+  });
 
   public robot: Robot | undefined = undefined;
 
@@ -43,7 +52,6 @@ export class UpdateRobotComponent implements OnInit, OnDestroy {
   public constructor(
     private readonly route: ActivatedRoute,
     private readonly store: Store,
-    private readonly fb: FormBuilder,
   ) {}
 
   public ngOnInit(): void {
@@ -69,19 +77,9 @@ export class UpdateRobotComponent implements OnInit, OnDestroy {
       .subscribe((robot: Robot | undefined) => {
         this.robot = robot;
 
-        this.form = this.fb.group({
-          name: [
-            robot?.name ?? '',
-            [
-              Validators.required,
-              Validators.minLength(1),
-              Validators.maxLength(255),
-            ],
-          ],
-          robotTypeId: [
-            robot?.robotTypeId ?? '',
-            [Validators.required, Validators.pattern(/^[1-9]\d{0,10}$/)],
-          ],
+        this.form.setValue({
+          name: robot?.name ?? '',
+          robotTypeId: robot?.robotTypeId ?? 0,
         });
       });
   }
@@ -95,10 +93,7 @@ export class UpdateRobotComponent implements OnInit, OnDestroy {
       return;
     }
 
-    const robotTypeId = transformIfNotUndefined(
-      this.form.value.robotTypeId ?? undefined,
-      parseIntOrThrow,
-    );
+    const robotTypeId = this.form.value.robotTypeId ?? undefined;
 
     if (robotTypeId === undefined) {
       return;
@@ -116,4 +111,9 @@ export class UpdateRobotComponent implements OnInit, OnDestroy {
   public isError(field: string): boolean {
     return isFormFieldError(this.form, field);
   }
+}
+
+interface FormStructure {
+  readonly name: FormControl<string | null>;
+  readonly robotTypeId: FormControl<number | null>;
 }
