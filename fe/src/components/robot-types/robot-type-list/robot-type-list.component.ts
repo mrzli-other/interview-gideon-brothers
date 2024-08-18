@@ -13,6 +13,7 @@ import { Store } from '@ngrx/store';
 import { RobotTypeActions, robotTypeFeature } from '../../../store';
 import { map, Subscription } from 'rxjs';
 import { AsyncPipe } from '@angular/common';
+import { pointListToPolygonString } from '../../../util';
 
 @Component({
   selector: 'robot-type-list',
@@ -21,7 +22,7 @@ import { AsyncPipe } from '@angular/common';
   templateUrl: './robot-type-list.component.html',
 })
 export class RobotTypeListComponent implements OnInit, OnDestroy {
-  public items: readonly RobotType[] = [];
+  public items: readonly RobotTypeView[] = [];
 
   public readonly displayedColumns: readonly string[] = [
     'id',
@@ -48,7 +49,7 @@ export class RobotTypeListComponent implements OnInit, OnDestroy {
         }),
       )
       .subscribe((items) => {
-        this.items = items;
+        this.items = items.map((item) => getRobotTypeView(item));
       });
   }
 
@@ -88,4 +89,20 @@ export class RobotTypeListComponent implements OnInit, OnDestroy {
   public handleCreateNewRobotType(): void {
     this.router.navigate(['create'], { relativeTo: this.route });
   }
+}
+
+interface RobotTypeView {
+  readonly id: number;
+  readonly name: string;
+  readonly dimensions: string;
+}
+
+function getRobotTypeView(robotType: RobotType): RobotTypeView {
+  const { id, name, dimensions } = robotType;
+
+  return {
+    id,
+    name,
+    dimensions: pointListToPolygonString(dimensions),
+  };
 }
