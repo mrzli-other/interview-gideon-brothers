@@ -58,7 +58,7 @@ export class RmDimensionsComponent
       };
 
       paper.setup(this.canvasRef.nativeElement);
-      paper.view.onMouseDown = this.handlePaperClick.bind(this);
+      paper.view.onMouseDown = this.handleAddPoint.bind(this);
     } else {
       console.error('Canvas not found.');
     }
@@ -83,19 +83,6 @@ export class RmDimensionsComponent
 
   public setDisabledState?(isDisabled: boolean): void {
     this.disabled = isDisabled;
-  }
-
-  public handlePaperClick(event: paper.MouseEvent): void {
-    event.preventDefault();
-
-    const canvas = this.canvasRef?.nativeElement;
-    if (!canvas) {
-      return;
-    }
-
-    console.log(event);
-
-    this.handleAddPoint(event);
   }
 
   public handleAddPoint(event: paper.MouseEvent): void {
