@@ -53,9 +53,7 @@ export class RobotListComponent implements OnInit, OnDestroy {
   }
 
   public ngOnDestroy(): void {
-    if (this.itemsSubscription !== undefined) {
-      this.itemsSubscription.unsubscribe();
-    }
+    this.itemsSubscription?.unsubscribe();
   }
 
   public handleEditItem(item: Robot): void {
