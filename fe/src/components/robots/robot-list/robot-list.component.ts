@@ -6,9 +6,9 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatTableModule } from '@angular/material/table';
 import { Router, ActivatedRoute } from '@angular/router';
 import { Store } from '@ngrx/store';
-import { Subscription, map } from 'rxjs';
-import { robotFeature, RobotActions } from '../../../store';
-import { Robot } from '../../../types';
+import { Subscription, combineLatest } from 'rxjs';
+import { robotFeature, RobotActions, robotTypeFeature } from '../../../store';
+import { Robot, RobotType } from '../../../types';
 import {
   ConfirmationDialogComponent,
   ConfirmationDialogInputData,
@@ -21,12 +21,12 @@ import {
   templateUrl: './robot-list.component.html',
 })
 export class RobotListComponent implements OnInit, OnDestroy {
-  public items: readonly Robot[] = [];
+  public items: readonly RobotView[] = [];
 
   public readonly displayedColumns: readonly string[] = [
     'id',
     'name',
-    'robotTypeId',
+    'robotType',
     'actions',
   ];
 
@@ -40,16 +40,12 @@ export class RobotListComponent implements OnInit, OnDestroy {
   ) {}
 
   public ngOnInit(): void {
-    this.itemsSubscription = this.store
-      .select(robotFeature.selectRobots)
-      .pipe(
-        map((robots) => {
-          return robots ?? [];
-        }),
-      )
-      .subscribe((items) => {
-        this.items = items;
-      });
+    this.itemsSubscription = combineLatest([
+      this.store.select(robotFeature.selectRobots),
+      this.store.select(robotTypeFeature.selectRobotTypes),
+    ]).subscribe(([robots, robotTypes]) => {
+      this.items = getRobotViews(robots, robotTypes);
+    });
   }
 
   public ngOnDestroy(): void {
@@ -83,4 +79,36 @@ export class RobotListComponent implements OnInit, OnDestroy {
   public handleCreateNewRobot(): void {
     this.router.navigate(['create'], { relativeTo: this.route });
   }
+}
+
+interface RobotView {
+  readonly id: number;
+  readonly name: string;
+  readonly robotType: string;
+}
+
+function getRobotViews(
+  robots: readonly Robot[] | undefined,
+  robotTypes: readonly RobotType[] | undefined,
+): readonly RobotView[] {
+  if (robots === undefined || robotTypes === undefined) {
+    return [];
+  }
+
+  const robotTypeMap: ReadonlyMap<number, RobotType> = new Map(
+    robotTypes.map((robotType) => [robotType.id, robotType] as const),
+  );
+
+  return robots.map((robot) => {
+    const robotType = robotTypeMap.get(robot.robotTypeId);
+    if (robotType === undefined) {
+      console.warn(`Robot type with ID ${robot.robotTypeId} not found`);
+    }
+
+    return {
+      id: robot.id,
+      name: robot.name,
+      robotType: robotType?.name ?? 'Unknown',
+    };
+  });
 }
