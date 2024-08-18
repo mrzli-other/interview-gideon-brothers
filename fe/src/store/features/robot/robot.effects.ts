@@ -99,7 +99,7 @@ export class RobotEffects {
           of(RobotActions.updatePending()),
           this.robotApiService.updateRobot(action.payload).pipe(
             tap(() => {
-              this.router.navigate(['robot-types']);
+              this.router.navigate(['robots']);
               this.snakcbarService.show('Robot updated.');
             }),
             map((robot) =>
