@@ -1,1 +1,41 @@
-<div class="">Update Robot Type {{ id$ | async }}</div>
+@if (robotType !== undefined) {
+  <div class="flex flex-col gap-4">
+    <div class="text-lg font-semibold">Update Robot Type</div>
+    <form
+      [formGroup]="form"
+      (ngSubmit)="handleSubmit()"
+      class="flex flex-col gap-2"
+    >
+      <div class="flex flex-col">
+        <label for="name" class="text-sm">Name</label>
+        <input
+          rm-text-input
+          type="text"
+          id="name"
+          formControlName="name"
+          [isError]="isError('name')"
+          autocomplete="off"
+        />
+      </div>
+      <div class="flex flex-col">
+        <label for="dimensions" class="text-sm">Dimensions</label>
+        <input
+          rm-text-input
+          type="text"
+          id="dimensions"
+          formControlName="dimensions"
+          [isError]="isError('dimensions')"
+          autocomplete="off"
+        />
+      </div>
+      <button
+        rm-button
+        class="text-blue-400 border-blue-400"
+        [disabled]="form.invalid"
+        type="submit"
+      >
+        Update
+      </button>
+    </form>
+  </div>
+}
