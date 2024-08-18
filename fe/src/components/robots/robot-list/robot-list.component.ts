@@ -1,6 +1,5 @@
 import { AsyncPipe } from '@angular/common';
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { MatButton } from '@angular/material/button';
 import { MatDialog } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTableModule } from '@angular/material/table';
@@ -17,7 +16,7 @@ import {
 @Component({
   selector: 'robot-list',
   standalone: true,
-  imports: [AsyncPipe, MatTableModule, MatIconModule, MatButton],
+  imports: [AsyncPipe, MatTableModule, MatIconModule],
   templateUrl: './robot-list.component.html',
 })
 export class RobotListComponent implements OnInit, OnDestroy {

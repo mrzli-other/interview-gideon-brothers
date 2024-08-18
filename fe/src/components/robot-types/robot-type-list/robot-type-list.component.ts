@@ -8,7 +8,6 @@ import {
   ConfirmationDialogComponent,
   ConfirmationDialogInputData,
 } from '../../shared';
-import { MatButton } from '@angular/material/button';
 import { Store } from '@ngrx/store';
 import { RobotTypeActions, robotTypeFeature } from '../../../store';
 import { map, Subscription } from 'rxjs';
@@ -18,7 +17,7 @@ import { pointListToPolygonString } from '../../../util';
 @Component({
   selector: 'robot-type-list',
   standalone: true,
-  imports: [AsyncPipe, MatTableModule, MatIconModule, MatButton],
+  imports: [AsyncPipe, MatTableModule, MatIconModule],
   templateUrl: './robot-type-list.component.html',
 })
 export class RobotTypeListComponent implements OnInit, OnDestroy {
