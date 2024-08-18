@@ -33,13 +33,13 @@ import { AsyncPipe } from '@angular/common';
 export class UpdateRobotComponent implements OnInit, OnDestroy {
   public robotTypes$: Observable<readonly RobotType[]> = of([]);
 
-  public form = new FormGroup({
-    name: new FormControl('', [
+  public readonly form = new FormGroup({
+    name: new FormControl<string>('', [
       Validators.required,
       Validators.minLength(1),
       Validators.maxLength(255),
     ]),
-    robotTypeId: new FormControl(0, [
+    robotTypeId: new FormControl<number>(0, [
       Validators.required,
       Validators.pattern(/^[1-9]\d{0,10}$/),
     ]),

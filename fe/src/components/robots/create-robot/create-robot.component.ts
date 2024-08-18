@@ -33,12 +33,12 @@ export class CreateRobotComponent implements OnInit {
   public robotTypes$: Observable<readonly RobotType[]> = of([]);
 
   public readonly form = new FormGroup({
-    name: new FormControl('', [
+    name: new FormControl<string>('', [
       Validators.required,
       Validators.minLength(1),
       Validators.maxLength(255),
     ]),
-    robotTypeId: new FormControl(0, [
+    robotTypeId: new FormControl<number>(0, [
       Validators.required,
       Validators.pattern(/^[1-9]\d{0,10}$/),
     ]),
