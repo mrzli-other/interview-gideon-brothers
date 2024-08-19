@@ -77,10 +77,8 @@ You can omit the seeding queries if you want to start with an empty database.
 Install the required python dependencies by navigating to the `be` folder and running following command:
 
 ```bash
-pip install -U python-dotenv psycopg "psycopg[binary]" Flask flask-cors flask-restful flask-apispec marshmallow flask-swagger-ui
+pip install -r requirements.txt
 ```
-
-This may not be a complete list of dependencies.
 
 You also need to set up the environment variables. Copy `.env.example` to `.env` and set database access variables based on your database configuration.
 
