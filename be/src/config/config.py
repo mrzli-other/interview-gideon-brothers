@@ -3,9 +3,11 @@ from dotenv import dotenv_values
 def get_config():
     env = _get_env()
 
+    port = env.get('PORT', 5000)
     db = _get_db_config(env)
 
     return {
+        'port': port,
         'db': db,
     }
 

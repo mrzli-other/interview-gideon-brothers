@@ -7,11 +7,11 @@ from container import DependencyContainer
 from controllers import RobotTypes, RobotType, Robots, Robot
 from traceback import print_exc
 
-def create_app():
+def create_app(config):
     app = Flask(__name__)
     CORS(app)
 
-    resource_args = { 'container': DependencyContainer() }
+    resource_args = { 'container': DependencyContainer(config) }
 
     # setup routes
     api_bp = Blueprint('api', __name__, url_prefix='/api')
