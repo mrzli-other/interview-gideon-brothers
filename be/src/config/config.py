@@ -1,19 +1,18 @@
+from os import environ
 from dotenv import dotenv_values
 
 def get_config():
     env = _get_env()
 
+    host = env.get('HOST', 'localhost')
     port = env.get('PORT', 5000)
     db = _get_db_config(env)
 
     return {
+        'host': host,
         'port': port,
         'db': db,
     }
-
-def init_config():
-    global config
-    config = get_config()
 
 def _get_db_config(env):
     return {
@@ -25,4 +24,7 @@ def _get_db_config(env):
     }
 
 def _get_env():
-    return dotenv_values(".env")
+    return {
+        **dotenv_values(".env"),
+        **environ,
+    }
