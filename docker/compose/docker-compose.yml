@@ -1,0 +1,77 @@
+name: robot-manager
+
+services:
+  frontend:
+    build:
+      context: ../../fe
+      dockerfile: Dockerfile
+    environment:
+      PORT: 80
+      SERVER_NAME: localhost
+      API_URL: http://backend:5000
+    ports:
+      - 4280:80
+      - 4243:443
+    networks:
+      - robot-manager
+    depends_on:
+      db:
+        condition: service_healthy
+  backend:
+    build:
+      context: ../../be
+      dockerfile: Dockerfile
+    environment:
+      HOST: 0.0.0.0 # required for this server to be accessible from host machine
+      PORT: 5000
+      DB_USER: user
+      DB_PASSWORD: pass
+      DB_HOST: db
+      DB_PORT: 5432
+      DB_NAME: robot_manager
+    ports:
+      - 5006:5000
+    networks:
+      - robot-manager
+    depends_on:
+      db:
+        condition: service_healthy
+  db-admin:
+    # register server credentials:
+    # - host: db (service name)
+    # - port: 5432 (port in internal network)
+    # - user: user (as specified in POSTGRES_USER in db service)
+    # - pass: pass (as specified in POSTGRES_PASSWORD in db service)
+    image: dpage/pgadmin4
+    environment:
+      PGADMIN_DEFAULT_EMAIL: example@email.com
+      PGADMIN_DEFAULT_PASSWORD: pass
+    ports:
+      - 7006:80
+    networks:
+      - robot-manager
+    depends_on:
+      db:
+        condition: service_healthy
+  db:
+    image: postgres:16.4
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: pass
+      POSTGRES_DB: robot_manager
+    ports:
+      - 15432:5432
+    volumes:
+      - db-data:/var/lib/postgresql/data
+    networks:
+      - robot-manager
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U user -d robot_manager"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+volumes:
+  db-data:
+networks:
+  robot-manager:
+    driver: bridge
