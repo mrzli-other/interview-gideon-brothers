@@ -31,6 +31,7 @@
     "zone.js": "~0.14.3"
   },
   "devDependencies": {
+    "@angular-builders/custom-webpack": "^18.0.0",
     "@angular-devkit/build-angular": "^18.1.4",
     "@angular/cli": "^18.1.4",
     "@angular/compiler-cli": "^18.1.0",
@@ -45,7 +46,10 @@
     "postcss": "^8.4.41",
     "tailwindcss": "^3.4.10",
     "type-fest": "^4.24.0",
-    "typescript": "~5.5.2"
+    "typescript": "~5.5.2",
+    "webpack": "^5.93.0"
   },
-  "packageManager": "pnpm@9.7.0+sha512.dc09430156b427f5ecfc79888899e1c39d2d690f004be70e05230b72cb173d96839587545d09429b55ac3c429c801b4dc3c0e002f653830a420fa2dd4e3cf9cf"
+  "optionalDependencies": {
+    "@rollup/rollup-linux-x64-gnu": "^4.21.0"
+  }
 }

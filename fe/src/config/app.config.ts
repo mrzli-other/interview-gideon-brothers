@@ -12,6 +12,7 @@ import {
 } from '../store';
 import { routes } from '../routing/app.routes';
 import { provideEffects } from '@ngrx/effects';
+import { environment } from '../environments';
 
 export function createAppConfig(): ApplicationConfig {
   return {
@@ -34,6 +35,6 @@ export function createAppConfig(): ApplicationConfig {
 
 function getConfigOptions(): ConfigOptions {
   return {
-    apiBaseUrl: 'http://localhost:5000',
+    apiBaseUrl: environment.apiBaseUrl,
   };
 }
