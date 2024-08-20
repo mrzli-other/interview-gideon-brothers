@@ -1,80 +1,34 @@
 # Robot Manager
 
-This project is a simple robot manager that implemnents CRUD operations for robots and robot types.
+This project is a simple robot manager that implements CRUD operations for robots and robot types.
 
-## Usage
+## Setup (Local)
 
 I did not test the installation process, and it is possible that not all dependencies are listed. If you encounter any issues, please let me know.
 
-### Prerequisites
+### Installation
 
-#### Installation
+To run the project, you need to have the following installed:
 
-To be able to run the project you need to have the following installed:
+- [PostgreSQL](https://www.postgresql.org/download/) database. I am using version 16.4.
+- [Python](https://www.python.org/downloads/) for the backend. I am using version 3.12.
+- [Node.js](https://nodejs.org/en/download/) for the frontend. I am using Node.js version 22.
 
-- [PostgreSQL](https://www.postgresql.org/download/) database. I am using version 16.4
-- [Python](https://www.python.org/downloads/) for backend. I am using version 3.11.
-- [Node.js](https://nodejs.org/en/download/) for frontend. I am using node 22.
+### Setup Database
 
-#### Setup
-
-##### Database
-
-Create a new database on your PostgreSQL server, manually using your database admin tool or by running the following SQL command:
+Create a new database on your PostgreSQL server, manually, using your database admin tool or by running the following SQL command:
 
 ```sql
 CREATE DATABASE robot_manager;
 ```
 
-Set up the database by running the following query:
+Set up the database by running the query you can find in the `docker/data/query.sql` file.
 
-```sql
-CREATE TABLE IF NOT EXISTS robot_type (
-    id SERIAL PRIMARY KEY,
-    name VARCHAR(255) UNIQUE NOT NULL,
-    dimensions POLYGON NOT NULL,
-    created_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP
-);
+You can omit the inserts if you want to start with an empty database.
 
-CREATE TABLE IF NOT EXISTS robot (
-    id SERIAL PRIMARY KEY,
-    name VARCHAR(255) UNIQUE NOT NULL,
-    robot_type_id INTEGER NOT NULL,
-    created_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (robot_type_id) REFERENCES robot_type(id)
-);
+### Setup Backend
 
-TRUNCATE TABLE robot RESTART IDENTITY CASCADE;
-TRUNCATE TABLE robot_type RESTART IDENTITY CASCADE;
-
-INSERT INTO robot_type (name, dimensions) VALUES
-('Type A', '((0.15,0.2),(0.85,0.2),(0.85,0.8),(0.15,0.8))'),
-('Type B', '((0.2,0.3),(0.7,0.3),(0.7,0.7),(0.2,0.7))'),
-('Type C', '((0.1,0.1),(0.4,0.2),(0.5,0.5),(0.2,0.4))'),
-('Type D', '((0.3,0.3),(0.6,0.3),(0.6,0.6),(0.3,0.6))'),
-('Type E', '((0.25,0.2),(0.75,0.2),(0.75,0.75),(0.25,0.75))'),
-('Type F', '((0.2,0.2),(0.8,0.2),(0.8,0.8),(0.2,0.8))');
-
-INSERT INTO robot (name, robot_type_id) VALUES
-('Robot 1', 1),
-('Robot 2', 2),
-('Robot 3', 3),
-('Robot 4', 1),
-('Robot 5', 2),
-('Robot 6', 3),
-('Robot 7', 4),
-('Robot 8', 5),
-('Robot 9', 6),
-('Robot 10', 1);
-```
-
-You can omit the seeding queries if you want to start with an empty database.
-
-#### Backend
-
-Install the required python dependencies by navigating to the `be` folder and running following command:
+Install the required Python dependencies by navigating to the `be` folder and running following command:
 
 ```bash
 pip install -r requirements.txt
@@ -82,7 +36,7 @@ pip install -r requirements.txt
 
 You also need to set up the environment variables. Copy `.env.example` to `.env` and set database access variables based on your database configuration.
 
-#### Frontend
+### Setup Frontend
 
 Make sure the frontend is pointing to the correct backend URL. You can specify the backend URL in the `src/config/app.config.ts` file. You will need to change the port if you used a port other than 5000 for the backend.
 
@@ -92,7 +46,7 @@ Install the required node dependencies by navigating to the `fe` folder and runn
 npm install
 ```
 
-### Running Locally
+## Running (Local)
 
 Make sure your database is running.
 
@@ -107,6 +61,52 @@ To start the frontend, run the following command in the `fe` folder:
 ```bash
 npm run start
 ```
+
+Your application should now be available at `http://localhost:4200`.
+API docs will be available at `http://localhost:5000/api/swagger`.
+
+## Running (Docker)
+
+To run the application using Docker:
+
+- Navigate to `docker/compose` folder.
+- Execute `./start.sh` to start the application.
+- If you make changes to the code, you can rebuild the frontend and backend images by executing `./build.sh`. You can then start the application again by executing `./start.sh` again.
+- Application will be available at `http://localhost:4280`. If this is your first time running the application, you will need to set up the database (see below).
+- API docs will be available at `http://localhost:5006/api/swagger`.
+
+### Setup Database
+
+Database needs to be set up when the application is first run. This is not done automatically.
+
+Database server can be accessed in one of two ways, described in the next two sections.
+
+After you have connected to the database server, simply run the script in file `docker/data/query.sql` on the `robot_manager` database.
+
+#### Accessing Database From the Host System
+
+You can access the database from your host system with the following credentials:
+
+- Host: `localhost`
+- Port: `15432`
+- Username: `user`
+- Password: `pass`
+
+#### Accessing Database via Dockerized Admin Interface
+
+Admin interface is available using your browser at `http://localhost:7006`.
+
+You can log in to the admin interface with:
+
+- Email: `example@email.com`
+- Password: `pass`
+
+After logging in, you can access the database with the following credentials:
+
+- Host: `db` (name of the service in the docker-compose file)
+- Port: `5432` (port inside `robot-manager` network)
+- Username: `user`
+- Password: `pass`
 
 ## Application Architecture
 
@@ -167,11 +167,11 @@ The API is as follows:
 
 **Robot type:**
 
-- `GET /api/robot-types` - Get all robot types.
-- `POST /api/robot-types` - Create a new robot type.
-- `GET /api/robot-types/<int:id>` - Get a robot type by ID.
-- `PUT /api/robot-types/<int:id>` - Update a robot type by ID.
-- `DELETE /api/robot-types/<int:id>` - Delete a robot type by ID.
+- `GET /api/robot_types` - Get all robot types.
+- `POST /api/robot_types` - Create a new robot type.
+- `GET /api/robot_types/<int:id>` - Get a robot type by ID.
+- `PUT /api/robot_types/<int:id>` - Update a robot type by ID.
+- `DELETE /api/robot_types/<int:id>` - Delete a robot type by ID.
 
 **Robot:**
 
